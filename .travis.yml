@@ -1,3 +1,5 @@
-language: node_js
+language: "node_js"
+node_js:
+    - "node"
 
 script: cd fulbito-server && npm install && npm test
