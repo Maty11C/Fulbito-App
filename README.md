@@ -1,1 +1,3 @@
-# Fulbito-App
+# Fulbito-App 
+### Status
+[![Build Status](https://travis-ci.org/simkimsia/UtilityBehaviors.png)](https://travis-ci.org/simkimsia/UtilityBehaviors)
