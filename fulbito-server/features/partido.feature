@@ -13,7 +13,7 @@ Feature: definir datos del partido
         When le defino la hora '19:00'
         Then el partido tiene hora '19:00'
 
-    Scenario: definir ubicacion
-        Given un partido sin ubicacion
-        When le defino la ubicacion 'Club América'
-        Then el partido tiene ubicacion 'Club América'
+    Scenario: definir lugar
+        Given un partido sin lugar
+        When le defino el lugar 'Club América'
+        Then el partido tiene lugar 'Club América'

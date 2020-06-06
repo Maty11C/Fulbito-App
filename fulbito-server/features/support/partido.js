@@ -4,7 +4,7 @@ class Partido {
     constructor() {
         this.fecha = null;
         this.hora = null;
-        this.ubicacion = null;
+        this.lugar = null;
       }
     getFecha() {
         return this.fecha;
@@ -22,12 +22,12 @@ class Partido {
         this.hora = hora;
     }
 
-    getUbicacion() {
-        return this.ubicacion;
+    getLugar() {
+        return this.lugar;
     }
 
-    setUbicacion(ubicacion) {
-        this.ubicacion = ubicacion;
+    setLugar(lugar) {
+        this.lugar = lugar;
     }
 }
 

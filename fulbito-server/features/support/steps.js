@@ -25,14 +25,14 @@ Then("el partido tiene hora {string}", function(hora) {
   expect(this.getHora()).to.eql(hora);
 })
 
-Given("un partido sin ubicacion", function(){
-  expect(this.getUbicacion()).to.eql(null);
+Given("un partido sin lugar", function(){
+  expect(this.getLugar()).to.eql(null);
 })
 
-When("le defino la ubicacion {string}", function(ubicacion) {
-  this.setUbicacion(ubicacion);
+When("le defino el lugar {string}", function(lugar) {
+  this.setLugar(lugar);
 })
 
-Then("el partido tiene ubicacion {string}", function(ubicacion) {
-  expect(this.getUbicacion()).to.eql(ubicacion);
+Then("el partido tiene lugar {string}", function(lugar) {
+  expect(this.getLugar()).to.eql(lugar);
 })

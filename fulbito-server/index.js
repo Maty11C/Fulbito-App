@@ -1,8 +1,10 @@
 var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
-var mysql = require('mysql');
 
 // SERVER
+app.use(bodyParser.json())
+
 app.get('/', function (req, res) {
   res.send('Hello World!');
 });
@@ -10,22 +12,3 @@ app.get('/', function (req, res) {
 app.listen(8081, function () {
   console.log('Server listening on port 8081!');
 });
-
-// DATABASE
-var connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'fulbito',
-  password: 'fulbito',
-  database: 'fulbito'
-})
-
-connection.connect(
-  function(error) {
-    if(!!error) {
-      console.log('Error')
-    }
-    else {
-      console.log('Database connected')
-    }
-  }
-)
