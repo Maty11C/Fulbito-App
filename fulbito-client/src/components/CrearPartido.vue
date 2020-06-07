@@ -8,6 +8,9 @@
       @hidden="limpiarCampos"
       ok-title="Crear"
       cancel-title="Cancelar"
+      header-bg-variant="dark"
+      header-text-variant="light"
+      ok-variant="success"
     >
       <b-form>
         <label for="fecha-partido">Fecha</label>
@@ -20,6 +23,13 @@
           :required="true"
           :state="esFechaValida"
           @input="validarFecha()"
+          label-no-date-selected="Fecha no seleccionada"
+          label-next-year="Año siguiente"
+          label-next-month="Mes siguiente"
+          label-current-month="Mes actual"
+          label-prev-month="Mes anterior"
+          label-prev-year="Año anterior"
+          label-help="Use las teclas del cursor para navegar por las fechas del calendario"
         ></b-form-datepicker>
         <label for="hora-partido">Hora</label>
         <b-form-timepicker
@@ -29,6 +39,11 @@
           :required="true"
           :state="esHoraValida"
           @input="validarHora()"
+          label-no-time-selected="Hora no seleccionada"
+          label-close-button="Cerrar"
+          label-hours="Horas"
+          label-minutes="Minutos"
+          :disabled="partido.fecha == ''"
         ></b-form-timepicker>
         <b-form-invalid-feedback id="hora-partido">Ingresá una hora válida</b-form-invalid-feedback>
         <b-form-group id="input-group-1" label="Lugar:" label-for="lugar">
@@ -80,13 +95,21 @@ export default {
       if (this.datosValidos()) {
         api()
           .post("/partidos", JSON.stringify(this.partido))
-          .then(response => {
+          .then(() => {
             this.$bvModal.hide("modal-partido");
-            console.log("Se guardó el partido", response.data);
+            this.$bvToast.toast("El partido se creó con éxito", {
+              title: 'Info',
+              variant: 'success',
+              solid: true
+            });
             this.limpiarCampos();
           })
           .catch(error => {
-            console.log("Ocurrió un error: ", error);
+            this.$bvToast.toast(`${error.response.data}`, {
+              title: 'Error',
+              variant: 'danger',
+              solid: true
+            });
           });
       }
     },
@@ -103,8 +126,14 @@ export default {
       this.esFechaValida = this.partido.fecha != "";
     },
     validarHora() {
-      if(moment(this.partido.fecha,'YYYY-MM-DD').isSame(moment().format('YYYY-MM-DD'))) {
-        this.esHoraValida = moment(this.partido.hora, 'HH:mm:ss').isAfter(moment(moment().format('HH:mm:ss'),'HH:mm:ss'));
+      if (
+        moment(this.partido.fecha, "YYYY-MM-DD").isSame(
+          moment().format("YYYY-MM-DD")
+        )
+      ) {
+        this.esHoraValida = moment(this.partido.hora, "HH:mm:ss").isAfter(
+          moment(moment().format("HH:mm:ss"), "HH:mm:ss")
+        );
       } else {
         this.esHoraValida = this.partido.hora != "";
       }

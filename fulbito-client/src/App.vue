@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <b-navbar toggleable="lg" type="dark" variant="dark">
+      <b-navbar-brand href="#">Fulbito App</b-navbar-brand>
+    </b-navbar>
     <div id="nav">
       <home></home>
     </div>
@@ -28,4 +31,11 @@ export default {
   padding: 30px;
 }
 
+body {
+  background: url("./assets/fondo-fulbito.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
 </style>
