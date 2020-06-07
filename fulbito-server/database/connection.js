@@ -1,4 +1,5 @@
 const Sequelize = require("sequelize");
+
 const partidoModel = require("./models/partido");
 
 const database = "fulbito";
@@ -21,4 +22,4 @@ sequelize.sync({ force: false }).then(() => {
   console.log(`Base de datos ${database} sincronizada`);
 });
 
-module.exports = Partido;
+module.exports = { Partido };
