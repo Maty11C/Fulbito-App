@@ -2,10 +2,12 @@ var express = require("express");
 var bodyParser = require("body-parser");
 const Partido = require("./database/connection");
 const moment = require("moment");
+const cors = require('cors')
 var app = express();
 
 // SERVER
 app.use(bodyParser.json());
+app.use(cors());
 
 app.get("/partidos/:id", function (request, response) {
   Partido.findAll({
@@ -19,7 +21,7 @@ app.get("/partidos/:id", function (request, response) {
 
 app.post("/partidos", function (request, response) {
   Partido.create({
-    fecha: moment(request.body.fecha, "DD/MM/YYYY"),
+    fecha: moment(request.body.fecha, "YYYY-MM-DD"),
     hora: request.body.hora,
     lugar: request.body.lugar,
   }).then(function (partido) {
