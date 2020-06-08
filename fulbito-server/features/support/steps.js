@@ -10,7 +10,7 @@ Given('un usuario crea un partido con fecha {string} hora {string} y lugar {stri
 })
 
 When('guarda la información', async function() {
-  response = await axios.post("http://localhost:8081/partidos", partido)
+  response = await axios.post('http://127.0.0.1:8081/partidos', partido)
 })
 
 Then('el partido queda definido con fecha {string} hora {string} y lugar {string}', function(fecha, hora, lugar) {
