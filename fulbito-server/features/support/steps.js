@@ -20,7 +20,7 @@ When('guarda la información', async function() {
 })
 
 Then('el partido queda definido con fecha {string} hora {string} y lugar {string}', function(fecha, hora, lugar) {
-  assert.equal(partido.fecha, response.data.fecha)
-  assert.equal(partido.hora, response.data.hora)
-  assert.equal(partido.lugar, response.data.lugar)
+  assert.equal(response.data.fecha, fecha)
+  assert.equal(response.data.hora, hora)
+  assert.equal(response.data.lugar, lugar)
 })
