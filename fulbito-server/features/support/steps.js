@@ -1,16 +1,6 @@
 const { Given, When, Then } = require("cucumber");
 const axios = require("axios");
 const assert = require("assert");
-const server = require("express-mock-server");
-const mock = require("../../mock/mock");
-
-let sources = [mock];
-
-let serverConfig = {
-  port: 8081
-};
-
-let serverMock = server.serverStart(sources, serverConfig);
 
 let partido = { fecha: "", hora: "", lugar: "" };
 let response;
@@ -32,8 +22,6 @@ Then(
     assert.equal(response.data.fecha, fecha);
     assert.equal(response.data.hora, hora);
     assert.equal(response.data.lugar, lugar);
-
-    serverMock.close();
   }
 );
 
