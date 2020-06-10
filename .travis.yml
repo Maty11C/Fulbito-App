@@ -10,9 +10,9 @@ before_install:
  - mysql -u root --password="" < fulbito-server/test/travis.sql
 
 install:
- - npm install
+ - cd fulbito-server && npm install
 
 before_script:
- - node fulbito-server/index.js
+ - node index.js
 
-script: cd fulbito-server && npm test
+script: npm test   
