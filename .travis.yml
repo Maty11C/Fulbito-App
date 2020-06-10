@@ -12,7 +12,4 @@ before_install:
 install:
  - cd fulbito-server && npm install
 
-before_script:
- - node index.js
-
-script: npm test   
+script: node index.js & npm test
