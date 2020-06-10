@@ -3,16 +3,16 @@ language: "node_js"
 node_js:
  - "node"
 
-install:
- - npm install
-
 services:
  - mysql
 
 before_install:
  - mysql -u root --password="" < fulbito-server/test/travis.sql
 
+install:
+ - npm install
+
 before_script:
- - cd fulbito-server && npm start
+ - node fulbito-server/index.js
 
 script: cd fulbito-server && npm test
