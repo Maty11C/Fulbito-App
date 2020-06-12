@@ -32,12 +32,7 @@ exports.crearPartido = (req, res) => {
     const horaPartido = req.body.hora
     const lugarPartido = req.body.lugar
     //Validate
-    if (fechaPartido <= moment()) {
-        res.status(400).send({
-            message: 'La fecha es inválida'
-        })
-        return
-    }
+    validacionFecha(fechaPartido, res)
     //Create partido
     const partido = {
         fecha: fechaPartido,
@@ -57,11 +52,16 @@ exports.crearPartido = (req, res) => {
 }
 
 exports.editarPartido = (req, res) => {
+    const fechaPartido = moment(req.body.fecha, "YYYY-MM-DD")
+    const horaPartido = req.body.hora
+    const lugarPartido = req.body.lugar
+    //Validate
+    validacionFecha(fechaPartido, res)
     //Editar partido
     Partido.update({ 
-        fecha : moment(req.body.fecha, "YYYY-MM-DD"),
-        hora : req.body.hora,
-        lugar : req.body.lugar,
+        fecha : fechaPartido,
+        hora : horaPartido,
+        lugar : lugarPartido,
     }, { where: { id: idPartido } })
     .then(data => {
         res.send(data)
@@ -72,4 +72,14 @@ exports.editarPartido = (req, res) => {
         })
     })
 
+}
+
+//Validacion de la fecha
+function validacionFecha(fecha, res) {
+    if (fechaPartido <= moment()) {
+        res.status(400).send({
+            message: 'La fecha es inválida'
+        })
+        return
+    }
 }
