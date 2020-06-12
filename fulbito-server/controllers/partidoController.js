@@ -45,3 +45,21 @@ exports.crearPartido = (req, res) => {
             })
         })
 }
+
+exports.editarPartido = (req, res) => {
+    //Editar partido
+    Partido.update({ 
+        fecha : moment(req.body.fecha, "YYYY-MM-DD"),
+        hora : req.body.hora,
+        lugar : req.body.lugar,
+    }, { where: { id: idPartido } })
+    .then(data => {
+        res.send(data)
+    })
+    .catch(error => {
+        res.status(500).send({
+            message: 'No se pudo editar el partido'
+        })
+    })
+
+}
