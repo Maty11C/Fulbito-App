@@ -3,83 +3,81 @@ const moment = require("moment");
 const { Partido } = require("../database/connection");
 
 exports.obtenerPartidoPorId = (req, res) => {
-    idPartido = req.params.id
-    Partido.findAll({ where: { id: idPartido } })
-        .then(data => {
-            res.send(data)
-        })
-        .catch(error => {
-            res.status(404).send({
-                message: 'No se encontró el partido'
-            })
-        })
-}
+  Partido.findAll({ where: { id: req.params.id } })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((error) => {
+      res.status(404).send({
+        message: "No se encontró el partido",
+      });
+    });
+};
 
-exports.obtenerTodosLosPartidos = (req, res) => {
-    Partido.findAll()
-        .then(data => {
-            res.send(data)
-        })
-        .catch(error => {
-            res.status(404).send({
-                message: 'No se pudieron obtener los partidos'
-            })
-        })
-}
+exports.obtenerTodosLosPartidos = (res) => {
+  Partido.findAll()
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((error) => {
+      res.status(404).send({
+        message: "No se pudieron obtener los partidos",
+      });
+    });
+};
 
 exports.crearPartido = (req, res) => {
-    const fechaPartido = moment(req.body.fecha, "YYYY-MM-DD")
-    const horaPartido = req.body.hora
-    const lugarPartido = req.body.lugar
-    //Validate
-    validacionFecha(fechaPartido, res)
-    //Create partido
+  const fechaPartido = moment(req.body.fecha, "YYYY-MM-DD");
+  const horaPartido = req.body.hora;
+  const lugarPartido = req.body.lugar;
+  if (fechaPartido.isBefore(moment())) {
+    res.status(400).send({
+      message: "La fecha es inválida",
+    });
+  } else {
     const partido = {
-        fecha: fechaPartido,
-        hora: horaPartido,
-        lugar: lugarPartido,        
-    }
-    //Save partido
+      fecha: fechaPartido,
+      hora: horaPartido,
+      lugar: lugarPartido,
+    };
     Partido.create(partido)
-        .then(data => {
-            res.send(data)
-        })
-        .catch(error => {
-            res.status(500).send({
-                message: 'No se pudo crear el partido'
-            })
-        })
-}
+      .then((data) => {
+        res.send(data);
+      })
+      .catch(() => {
+        res.status(500).send({
+          message: "No se pudo crear el partido",
+        });
+      });
+  }
+};
 
 exports.editarPartido = (req, res) => {
-    const fechaPartido = moment(req.body.fecha, "YYYY-MM-DD")
-    const horaPartido = req.body.hora
-    const lugarPartido = req.body.lugar
-    //Validate
-    validacionFecha(fechaPartido, res)
-    //Editar partido
-    Partido.update({ 
-        fecha : fechaPartido,
-        hora : horaPartido,
-        lugar : lugarPartido,
-    }, { where: { id: idPartido } })
-    .then(data => {
-        res.send(data)
-    })
-    .catch(error => {
+  const fechaPartido = moment(req.body.fecha, "YYYY-MM-DD");
+  const horaPartido = req.body.hora;
+  const lugarPartido = req.body.lugar;
+  if (fechaPartido.isBefore(moment())) {
+    res.status(400).send({
+      message: "La fecha es inválida",
+    });
+  } else {
+    Partido.update(
+      {
+        fecha: fechaPartido,
+        hora: horaPartido,
+        lugar: lugarPartido,
+      },
+      { where: { id: req.params.id } }
+    )
+      .then(() => {
+        res.send({
+          message: "El partido se actualizó exitosamente",
+        });
+      })
+      .catch(() => {
         res.status(500).send({
-            message: 'No se pudo editar el partido'
-        })
-    })
-
-}
-
-//Validacion de la fecha
-function validacionFecha(fecha, res) {
-    if (fechaPartido <= moment()) {
-        res.status(400).send({
-            message: 'La fecha es inválida'
-        })
-        return
-    }
-}
+          message: "No se pudo editar el partido",
+        });
+      });
+  }
+};
