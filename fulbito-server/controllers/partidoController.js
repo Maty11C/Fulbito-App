@@ -28,11 +28,21 @@ exports.obtenerTodosLosPartidos = (req, res) => {
 }
 
 exports.crearPartido = (req, res) => {
+    const fechaPartido = moment(req.body.fecha, "YYYY-MM-DD")
+    const horaPartido = req.body.hora
+    const lugarPartido = req.body.lugar
+    //Validate
+    if (fechaPartido <= moment()) {
+        res.status(400).send({
+            message: 'La fecha es inválida'
+        })
+        return
+    }
     //Create partido
     const partido = {
-        fecha: moment(req.body.fecha, "YYYY-MM-DD"),
-        hora: req.body.hora,
-        lugar: req.body.lugar,        
+        fecha: fechaPartido,
+        hora: horaPartido,
+        lugar: lugarPartido,        
     }
     //Save partido
     Partido.create(partido)
