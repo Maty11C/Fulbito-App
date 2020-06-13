@@ -33,9 +33,34 @@ Then(
   }
 );
 
-Then("el partido no se crea", function () {
+Then("el partido no se crea por fecha inválida", function () {
   assert.equal(dataResponse.message, "La fecha es inválida");
 });
+
+Then("el partido no se crea", function () {
+  assert.equal(dataResponse.message, "No se pudo crear el partido");
+});
+
+Given(
+  "un usuario crea un partido con hora {string} y lugar {string}",
+  function (hora, lugar) {
+    partido = { hora, lugar };
+  }
+);
+
+Given(
+  "un usuario crea un partido con fecha {string} y lugar {string}",
+  function (fecha, lugar) {
+    partido = { fecha, lugar };
+  }
+);
+
+Given(
+  "un usuario crea un partido con fecha {string} y hora {string}",
+  function (fecha, hora) {
+    partido = { fecha, hora };
+  }
+);
 
 Given("un partido ya creado con fecha {string}", async function (fecha) {
   let hora = "19:00";
@@ -59,13 +84,15 @@ When("edito la fecha del partido por {string}", async function (fecha) {
     });
 });
 
-Then("la fecha del partido esta actualizada al {string}", async function (fecha) {
+Then("la fecha del partido esta actualizada al {string}", async function (
+  fecha
+) {
   let partidoActualizado;
   await axios
     .get(`http://localhost:8081/partidos/${idPartido}`)
     .then((response) => {
       partidoActualizado = response.data;
-    })
+    });
   assert.equal(dataResponse.message, "El partido se actualizó exitosamente");
   assert.equal(partidoActualizado[0].fecha, fecha);
 });

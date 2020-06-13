@@ -7,9 +7,18 @@ module.exports = (sequelize, type) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      fecha: type.DATEONLY,
-      hora: type.TIME,
-      lugar: type.STRING,
+      fecha: {
+        type: type.DATEONLY,
+        allowNull: false,
+      },
+      hora: {
+        type: type.TIME,
+        allowNull: false,
+      },
+      lugar: {
+        type: type.STRING,
+        allowNull: false,
+      },
     },
     { timestamps: false }
   );
