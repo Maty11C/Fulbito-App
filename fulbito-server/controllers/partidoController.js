@@ -53,10 +53,10 @@ exports.crearPartido = (req, res) => {
 };
 
 exports.editarPartido = (req, res) => {
-  const fechaPartido = moment(req.body.fecha, "YYYY-MM-DD");
+  const fechaPartido = req.body.fecha ? moment(req.body.fecha, "YYYY-MM-DD") : undefined;
   const horaPartido = req.body.hora;
   const lugarPartido = req.body.lugar;
-  if (fechaPartido.isBefore(moment())) {
+  if (fechaPartido && fechaPartido.isBefore(moment())) {
     res.status(400).send({
       message: "La fecha es inválida",
     });
