@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <b-row cols="1" cols-sm="2" cols-lg="3" >
+    <b-row cols="1" cols-sm="2" cols-lg="3">
       <template v-for="partido in partidos">
         <b-col :key="partido.id">
           <b-card
@@ -27,17 +27,33 @@
               </p>
             </b-card-text>
 
-            <b-button href="#" variant="success">Editar</b-button>
+            <b-button v-b-modal.modal-editar variant="success" @click="setearIdPartido(partido.id)">Editar</b-button>
           </b-card>
         </b-col>
       </template>
+      <editar-partido :idPartido="idPartido" />
     </b-row>
   </b-container>
 </template>
 
 <script>
+import EditarPartido from "./EditarPartido";
+
 export default {
   name: "listado-partidos",
+  data() {
+    return {
+      idPartido: ""
+    }
+  },
+  components: {
+    EditarPartido
+  },
+  methods: {
+    setearIdPartido(id) {
+      this.idPartido = id;
+    }
+  },
   computed: {
     partidos() {
       return this.$store.getters.obtenerPartidos;
