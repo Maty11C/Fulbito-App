@@ -7,19 +7,19 @@ exports.obtenerPartidoPorId = (req, res) => {
     .then((data) => {
       res.send(data);
     })
-    .catch((error) => {
+    .catch(() => {
       res.status(404).send({
         message: "No se encontró el partido",
       });
     });
 };
 
-exports.obtenerTodosLosPartidos = (res) => {
+exports.obtenerTodosLosPartidos = (req,res) => {
   Partido.findAll()
     .then((data) => {
       res.send(data);
     })
-    .catch((error) => {
+    .catch(() => {
       res.status(404).send({
         message: "No se pudieron obtener los partidos",
       });

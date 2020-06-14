@@ -95,8 +95,9 @@ export default {
       if (this.datosValidos()) {
         api()
           .post("/partidos", JSON.stringify(this.partido))
-          .then(() => {
+          .then(response => {
             this.$bvModal.hide("modal-partido");
+            this.$store.commit('agregarPartido', response.data);
             this.$bvToast.toast("El partido se creó con éxito", {
               title: 'Info',
               variant: 'success',
