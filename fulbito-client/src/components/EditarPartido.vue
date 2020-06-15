@@ -2,7 +2,7 @@
   <b-modal
     id="modal-editar"
     title="Editar Partido"
-    @change="buscarPartido"
+    @show="buscarPartido"
     @ok="editar"
     @hidden="limpiarCampos"
     ok-title="Editar"
@@ -95,9 +95,13 @@ export default {
         api()
           .put(`/partidos/${this.idPartido}`, JSON.stringify(this.partido))
           .then(() => {
-            this.partido.id = this.idPartido;
+            let partido = {};
+            partido.id = this.idPartido;
+            partido.fecha = this.partido.fecha;
+            partido.hora = this.partido.hora;
+            partido.lugar = this.partido.lugar;
+            this.$store.commit("modificarPartido", partido);
             this.$bvModal.hide("modal-editar");
-            this.$store.commit("modificarPartido", this.partido);
             this.$bvToast.toast("El partido se editó con éxito", {
               title: "Info",
               variant: "success",
@@ -105,7 +109,7 @@ export default {
             });
           })
           .catch(error => {
-            this.$bvToast.toast(`${error.response.data}`, {
+            this.$bvToast.toast(`${error.response.data.message}`, {
               title: "Error",
               variant: "danger",
               solid: true

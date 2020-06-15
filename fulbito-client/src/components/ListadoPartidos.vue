@@ -15,11 +15,11 @@
             <b-card-text>
               <p>
                 <strong>Fecha:</strong>
-                {{partido.fecha}}
+                {{fechaFormateada(partido.fecha)}}
               </p>
               <p>
                 <strong>Hora:</strong>
-                {{partido.hora}}
+                {{horaFormateada(partido.hora)}}
               </p>
               <p>
                 <strong>Lugar:</strong>
@@ -38,6 +38,7 @@
 
 <script>
 import EditarPartido from "./EditarPartido";
+import moment from "moment";
 
 export default {
   name: "listado-partidos",
@@ -52,6 +53,15 @@ export default {
   methods: {
     setearIdPartido(id) {
       this.idPartido = id;
+    },
+    fechaFormateada(fecha) {
+      return moment(fecha)
+        .locale("es")
+        .format("DD MMM YYYY");
+    },
+    horaFormateada(hora) {
+      return moment(hora, "HH:mm:ss")
+      .format("HH:mm [hs]")
     }
   },
   computed: {

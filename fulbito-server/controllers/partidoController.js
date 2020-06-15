@@ -27,10 +27,10 @@ exports.obtenerTodosLosPartidos = (req,res) => {
 };
 
 exports.crearPartido = (req, res) => {
-  const fechaPartido = moment(req.body.fecha, "YYYY-MM-DD");
+  const fechaPartido = moment(req.body.fecha, "YYYY-MM-DD").startOf('day');
   const horaPartido = req.body.hora;
   const lugarPartido = req.body.lugar;
-  if (fechaPartido.isBefore(moment())) {
+  if (fechaPartido.isBefore(moment().startOf('day'))) {
     res.status(400).send({
       message: "La fecha es inválida",
     });
@@ -53,10 +53,10 @@ exports.crearPartido = (req, res) => {
 };
 
 exports.editarPartido = (req, res) => {
-  const fechaPartido = req.body.fecha ? moment(req.body.fecha, "YYYY-MM-DD") : undefined;
+  const fechaPartido = req.body.fecha ? moment(req.body.fecha, "YYYY-MM-DD").startOf('day') : undefined;
   const horaPartido = req.body.hora;
   const lugarPartido = req.body.lugar;
-  if (fechaPartido && fechaPartido.isBefore(moment())) {
+  if (fechaPartido && fechaPartido.isBefore(moment().startOf('day'))) {
     res.status(400).send({
       message: "La fecha es inválida",
     });
