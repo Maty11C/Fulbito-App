@@ -14,16 +14,16 @@ Feature: Crear un partido
         Then el partido no se crea por fecha inválida
 
     Scenario: Creacion de un partido sin fecha
-        Given un usuario crea un partido con hora '19:00:00' y lugar 'Libertadores de América'
+        Given un usuario crea un partido con fecha '' hora '19:00:00' y lugar 'Libertadores de América'
         When guarda la información
-        Then el partido no se crea
+        Then el partido no se crea por falta de fecha
     
     Scenario: Creacion de un partido sin hora
-        Given un usuario crea un partido con fecha '2021-06-16' y lugar 'Libertadores de América'
+        Given un usuario crea un partido con fecha '2021-06-16' hora '' y lugar 'Libertadores de América'
         When guarda la información
-        Then el partido no se crea
+        Then el partido no se crea por falta de hora
     
     Scenario: Creacion de un partido sin lugar
-        Given un usuario crea un partido con fecha '2021-06-16' y hora '19:00:00'
+        Given un usuario crea un partido con fecha '2021-06-16' hora '19:00:00' y lugar ''
         When guarda la información
-        Then el partido no se crea
+        Then el partido no se crea por falta de lugar

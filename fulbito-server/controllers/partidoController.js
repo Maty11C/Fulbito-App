@@ -27,29 +27,46 @@ exports.obtenerTodosLosPartidos = (req,res) => {
 };
 
 exports.crearPartido = (req, res) => {
-  const fechaPartido = moment(req.body.fecha, "YYYY-MM-DD").startOf('day');
+  // Validaciones
+  var fechaPartido = req.body.fecha;
   const horaPartido = req.body.hora;
   const lugarPartido = req.body.lugar;
+  if (fechaPartido === '') {
+    res.status(400).send({
+      message: "La fecha es obligatoria",
+    });
+  }
+  if (horaPartido === '') {
+    res.status(400).send({
+      message: "La hora es obligatoria",
+    });
+  }
+  if (lugarPartido === '') {
+    res.status(400).send({
+      message: "El lugar es obligatorio",
+    });
+  }
+  fechaPartido = moment(fechaPartido, "YYYY-MM-DD").startOf('day');
   if (fechaPartido.isBefore(moment().startOf('day'))) {
     res.status(400).send({
       message: "La fecha es inválida",
     });
-  } else {
-    const partido = {
-      fecha: fechaPartido,
-      hora: horaPartido,
-      lugar: lugarPartido,
-    };
-    Partido.create(partido)
-      .then((data) => {
-        res.send(data);
-      })
-      .catch(() => {
-        res.status(500).send({
-          message: "No se pudo crear el partido",
-        });
-      });
   }
+  // Guardado
+  const partido = {
+    fecha: fechaPartido,
+    hora: horaPartido,
+    lugar: lugarPartido,
+  };
+  Partido.create(partido)
+    .then((data) => {
+      res.send(data);
+    })
+    .catch(() => {
+      res.status(500).send({
+        message: "No se pudo crear el partido",
+      });
+    });
 };
 
 exports.editarPartido = (req, res) => {
