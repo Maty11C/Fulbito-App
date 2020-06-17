@@ -1,7 +1,7 @@
 # Fulbito-App 
 
 ### Status
-[![Build Status](https://travis-ci.org/simkimsia/UtilityBehaviors.png)](https://travis-ci.org/simkimsia/UtilityBehaviors)
+[![Build Status](https://travis-ci.org/Maty11C/Fulbito-App.svg?branch=master)
 
 Visual Story Mapping: https://trello.com/b/6AUfiYlu/user-story-mapping-fulbito-app
 
