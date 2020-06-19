@@ -116,5 +116,5 @@ Then("el partido no se edita por fecha inválida", function () {
 });
 
 After(async function () {
-  await axios.post("http://localhost:8081/partidos")
+  await axios.delete("http://localhost:8081/partidos")
 });
