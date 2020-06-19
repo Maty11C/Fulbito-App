@@ -1,4 +1,4 @@
-const { Given, When, Then } = require("cucumber");
+const { Given, When, Then, After } = require("cucumber");
 const axios = require("axios");
 const assert = require("assert");
 
@@ -46,4 +46,8 @@ Then("el partido no se crea por falta de hora", function () {
 
 Then("el partido no se crea por falta de lugar", function () {
   assert.equal(dataResponse.message, "El lugar es obligatorio");
+});
+
+After(async function () {
+  await axios.delete("http://localhost:8081/partidos")
 });

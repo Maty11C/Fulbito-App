@@ -14,4 +14,7 @@ router.post('/', partidoController.crearPartido)
 // Se edita un partido con una cierta id
 router.put('/:id', partidoController.editarPartido)
 
+// Se eliminan todos los partidos
+router.delete('/', partidoController.eliminarTodosLosPartidos)
+
 module.exports = router;

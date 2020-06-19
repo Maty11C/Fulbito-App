@@ -35,22 +35,26 @@ exports.crearPartido = (req, res) => {
     res.status(400).send({
       message: "La fecha es obligatoria",
     });
+    return
   }
   if (horaPartido === '') {
     res.status(400).send({
       message: "La hora es obligatoria",
     });
+    return
   }
   if (lugarPartido === '') {
     res.status(400).send({
       message: "El lugar es obligatorio",
     });
+    return
   }
   fechaPartido = moment(fechaPartido, "YYYY-MM-DD").startOf('day');
   if (fechaPartido.isBefore(moment().startOf('day'))) {
     res.status(400).send({
       message: "La fecha es inválida",
     });
+    return
   }
   // Guardado
   const partido = {
@@ -97,4 +101,18 @@ exports.editarPartido = (req, res) => {
         });
       });
   }
+};
+
+exports.eliminarTodosLosPartidos = (req, res) => {
+  Partido.destroy({ where: {}, truncate: true })
+    .then((data) => {
+      res.send({
+        message: "Se eliminaron los partidos",
+      });
+    })
+    .catch(() => {
+      res.status(404).send({
+        message: "No se pudieron eliminar los partidos",
+      });
+    });
 };
