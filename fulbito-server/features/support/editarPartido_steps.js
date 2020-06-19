@@ -115,6 +115,23 @@ Then("el partido no se edita por fecha inválida", function () {
   assert.equal(dataResponse.message, "La fecha es inválida");
 });
 
+When("edito el partido y no ingreso un campo", async function () {
+  idPartido = dataResponse.id;
+  partido = { };
+  await axios
+    .put(`http://localhost:8081/partidos/${idPartido}`, partido)
+    .then((response) => {
+      dataResponse = response.data;
+    })
+    .catch((error) => {
+      dataResponse = error.response.data;
+    });
+});
+
+Then("el partido no se edita por falta de campos", function () {
+  assert.equal(dataResponse.message, "Se debe ingresar al menos un campo para actualizar");
+});
+
 After(async function () {
   await axios.delete("http://localhost:8081/partidos")
 });

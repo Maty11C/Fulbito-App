@@ -74,33 +74,42 @@ exports.crearPartido = (req, res) => {
 };
 
 exports.editarPartido = (req, res) => {
-  const fechaPartido = req.body.fecha ? moment(req.body.fecha, "YYYY-MM-DD").startOf('day') : undefined;
+  // Validaciones
+  var fechaPartido = req.body.fecha;
   const horaPartido = req.body.hora;
   const lugarPartido = req.body.lugar;
-  if (fechaPartido && fechaPartido.isBefore(moment().startOf('day'))) {
+  if (fechaPartido === undefined && horaPartido === undefined && lugarPartido === undefined) {
     res.status(400).send({
-      message: "La fecha es inválida",
+      message: "Se debe ingresar al menos un campo para actualizar",
     });
-  } else {
-    Partido.update(
-      {
-        fecha: fechaPartido,
-        hora: horaPartido,
-        lugar: lugarPartido,
-      },
-      { where: { id: req.params.id } }
-    )
-      .then(() => {
-        res.send({
-          message: "El partido se actualizó exitosamente",
-        });
-      })
-      .catch(() => {
-        res.status(500).send({
-          message: "No se pudo editar el partido",
-        });
-      });
+    return
   }
+  if (fechaPartido !== undefined) {
+    fechaPartido = moment(req.body.fecha, "YYYY-MM-DD").startOf('day');  
+    if (fechaPartido.isBefore(moment().startOf('day'))) {
+      res.status(400).send({
+        message: "La fecha es inválida",
+      });
+      return
+    }
+  }
+  // Actualizacion
+  const partido = {
+    fecha: fechaPartido,
+    hora: horaPartido,
+    lugar: lugarPartido,
+  };
+  Partido.update(partido, { where: { id: req.params.id } })
+    .then(() => {
+      res.send({
+        message: "El partido se actualizó exitosamente",
+      });
+    })
+    .catch(() => {
+      res.status(500).send({
+        message: "No se pudo editar el partido",
+      });
+    });
 };
 
 exports.eliminarTodosLosPartidos = (req, res) => {

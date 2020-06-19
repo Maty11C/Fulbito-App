@@ -22,5 +22,8 @@ Feature: Editar datos basicos de un partido
         Given un partido ya creado con fecha '2020-12-01'
         When edito la fecha del partido por '1986-12-31'
         Then el partido no se edita por fecha inválida
-        
-        
+
+    Scenario: Edicion sin campo ingresado de un partido
+        Given un partido ya creado con fecha '2020-12-01'
+        When edito el partido y no ingreso un campo
+        Then el partido no se edita por falta de campos
