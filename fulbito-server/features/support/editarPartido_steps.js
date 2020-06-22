@@ -2,6 +2,7 @@ const { Given, When, Then, After } = require("cucumber");
 const axios = require("axios");
 const assert = require("assert");
 
+let equipos  = [{nombre: "Los bosteros"}, {nombre: "Las gallinas"}];
 let partido = { fecha: "", hora: "", lugar: "" };
 let dataResponse;
 let idPartido;
@@ -9,7 +10,7 @@ let idPartido;
 Given("un partido ya creado con fecha {string}", async function (fecha) {
     let hora = "19:00";
     let lugar = "Libertadores de América";
-    partido = { fecha, hora, lugar };
+    partido = { fecha, hora, lugar, equipos };
     await axios
       .post("http://localhost:8081/partidos", partido)
       .then((response) => (dataResponse = response.data));
@@ -44,7 +45,7 @@ Then("la fecha del partido esta actualizada al {string}", async function (
 Given("un partido ya creado con hora {string}", async function (hora) {
   let fecha = "2020-12-01";
   let lugar = "Libertadores de América";
-  partido = { fecha, hora, lugar };
+  partido = { fecha, hora, lugar, equipos };
   await axios
     .post("http://localhost:8081/partidos", partido)
     .then((response) => (dataResponse = response.data));
@@ -79,7 +80,7 @@ Then("la hora del partido está actualizada a {string}", async function (
 Given("un partido ya creado con ubicación {string}", async function (lugar) {
   let hora = "19:00";
   let fecha = "2020-12-01";
-  partido = { fecha, hora, lugar };
+  partido = { fecha, hora, lugar, equipos };
   await axios
     .post("http://localhost:8081/partidos", partido)
     .then((response) => (dataResponse = response.data));

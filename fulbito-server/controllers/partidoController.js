@@ -1,6 +1,6 @@
 const moment = require("moment");
 
-const { Partido } = require("../database/connection");
+const { Partido, Equipo } = require("../database/connection");
 
 exports.obtenerPartidoPorId = (req, res) => {
   Partido.findAll({ where: { id: req.params.id } })
@@ -14,7 +14,7 @@ exports.obtenerPartidoPorId = (req, res) => {
     });
 };
 
-exports.obtenerTodosLosPartidos = (req,res) => {
+exports.obtenerTodosLosPartidos = (req, res) => {
   Partido.findAll()
     .then((data) => {
       res.send(data);
@@ -31,30 +31,31 @@ exports.crearPartido = (req, res) => {
   var fechaPartido = req.body.fecha;
   const horaPartido = req.body.hora;
   const lugarPartido = req.body.lugar;
-  if (fechaPartido === '') {
+  const equipos = req.body.equipos;
+  if (fechaPartido === "") {
     res.status(400).send({
       message: "La fecha es obligatoria",
     });
-    return
+    return;
   }
-  if (horaPartido === '') {
+  if (horaPartido === "") {
     res.status(400).send({
       message: "La hora es obligatoria",
     });
-    return
+    return;
   }
-  if (lugarPartido === '') {
+  if (lugarPartido === "") {
     res.status(400).send({
       message: "El lugar es obligatorio",
     });
-    return
+    return;
   }
-  fechaPartido = moment(fechaPartido, "YYYY-MM-DD").startOf('day');
-  if (fechaPartido.isBefore(moment().startOf('day'))) {
+  fechaPartido = moment(fechaPartido, "YYYY-MM-DD").startOf("day");
+  if (fechaPartido.isBefore(moment().startOf("day"))) {
     res.status(400).send({
       message: "La fecha es inválida",
     });
-    return
+    return;
   }
   // Guardado
   const partido = {
@@ -62,8 +63,21 @@ exports.crearPartido = (req, res) => {
     hora: horaPartido,
     lugar: lugarPartido,
   };
+
+  const equipo1 = {
+    nombre: equipos[0].nombre,
+  };
+
+  const equipo2 = {
+    nombre: equipos[1].nombre,
+  };
   Partido.create(partido)
     .then((data) => {
+      let partidoId = data.id;
+      equipo1.partidoId = partidoId;
+      equipo2.partidoId = partidoId;
+      Equipo.create(equipo1);
+      Equipo.create(equipo2);
       res.send(data);
     })
     .catch(() => {
@@ -78,19 +92,24 @@ exports.editarPartido = (req, res) => {
   var fechaPartido = req.body.fecha;
   const horaPartido = req.body.hora;
   const lugarPartido = req.body.lugar;
-  if (fechaPartido === undefined && horaPartido === undefined && lugarPartido === undefined) {
+  const equipos = req.body.equipos;
+  if (
+    fechaPartido === undefined &&
+    horaPartido === undefined &&
+    lugarPartido === undefined
+  ) {
     res.status(400).send({
       message: "Se debe ingresar al menos un campo para actualizar",
     });
-    return
+    return;
   }
   if (fechaPartido !== undefined) {
-    fechaPartido = moment(req.body.fecha, "YYYY-MM-DD").startOf('day');  
-    if (fechaPartido.isBefore(moment().startOf('day'))) {
+    fechaPartido = moment(req.body.fecha, "YYYY-MM-DD").startOf("day");
+    if (fechaPartido.isBefore(moment().startOf("day"))) {
       res.status(400).send({
         message: "La fecha es inválida",
       });
-      return
+      return;
     }
   }
   // Actualizacion
@@ -99,6 +118,7 @@ exports.editarPartido = (req, res) => {
     hora: horaPartido,
     lugar: lugarPartido,
   };
+
   Partido.update(partido, { where: { id: req.params.id } })
     .then(() => {
       res.send({
@@ -114,7 +134,7 @@ exports.editarPartido = (req, res) => {
 
 exports.eliminarTodosLosPartidos = (req, res) => {
   Partido.destroy({ where: {}, truncate: true })
-    .then((data) => {
+    .then(() => {
       res.send({
         message: "Se eliminaron los partidos",
       });

@@ -2,13 +2,14 @@ const { Given, When, Then, After } = require("cucumber");
 const axios = require("axios");
 const assert = require("assert");
 
-let partido = { fecha: "", hora: "", lugar: "" };
+let equipos  = [{nombre: "Los bosteros"}, {nombre: "Las gallinas"}];
+let partido = { fecha: "", hora: "", lugar: ""};
 let dataResponse;
 
 Given(
   "un usuario crea un partido con fecha {string} hora {string} y lugar {string}",
   function (fecha, hora, lugar) {
-    partido = { fecha, hora, lugar };
+    partido = { fecha, hora, lugar, equipos};
   }
 );
 
