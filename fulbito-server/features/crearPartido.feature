@@ -27,3 +27,13 @@ Feature: Crear un partido
         Given un usuario crea un partido con fecha '2021-06-16' hora '19:00:00' y lugar ''
         When guarda la información
         Then el partido no se crea por falta de lugar
+    
+    Scenario: Creacion de un partido con equipos
+        Given un usuario crea un partido con equipo1 'Los bosteros' y equipo2 'Las gallinas'
+        When guarda la información
+        Then el partido queda definido con equipo1 'Los bosteros' y equipo2 'Las gallinas'
+
+    Scenario: Creacion de un partido sin equipos
+        Given un usuario crea un partido con equipo1 '' y equipo2 ''
+        When guarda la información
+        Then el partido no se crea por falta de nombres de equipo

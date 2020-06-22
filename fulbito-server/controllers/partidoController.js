@@ -57,6 +57,12 @@ exports.crearPartido = (req, res) => {
     });
     return;
   }
+  if(!(equipos[0].nombre || equipos[1].nombre)) {
+    res.status(400).send({
+      message: "Los equipos son obligatorios",
+    });
+    return;
+  }
   // Guardado
   const partido = {
     fecha: fechaPartido,
@@ -64,26 +70,23 @@ exports.crearPartido = (req, res) => {
     lugar: lugarPartido,
   };
 
-  const equipo1 = {
-    nombre: equipos[0].nombre,
-  };
-
-  const equipo2 = {
-    nombre: equipos[1].nombre,
-  };
-  Partido.create(partido)
+  Equipo.create(equipos[0]).then((data) => {
+    partido.equipo1_id = data.dataValues.id;
+  });
+  Equipo.create(equipos[1])
     .then((data) => {
-      let partidoId = data.id;
-      equipo1.partidoId = partidoId;
-      equipo2.partidoId = partidoId;
-      Equipo.create(equipo1);
-      Equipo.create(equipo2);
-      res.send(data);
+      partido.equipo2_id = data.dataValues.id;
     })
-    .catch(() => {
-      res.status(500).send({
-        message: "No se pudo crear el partido",
-      });
+    .then(() => {
+      Partido.create(partido)
+        .then((data) => {
+          res.send(data);
+        })
+        .catch(() => {
+          res.status(500).send({
+            message: "No se pudo crear el partido",
+          });
+        });
     });
 };
 
@@ -133,6 +136,7 @@ exports.editarPartido = (req, res) => {
 };
 
 exports.eliminarTodosLosPartidos = (req, res) => {
+  Equipo.destroy({ where: {}, truncate: true });
   Partido.destroy({ where: {}, truncate: true })
     .then(() => {
       res.send({

@@ -2,7 +2,7 @@ const { Given, When, Then, After } = require("cucumber");
 const axios = require("axios");
 const assert = require("assert");
 
-let equipos  = [{nombre: "Los bosteros"}, {nombre: "Las gallinas"}];
+let equipos  = [{nombre: "equipo1"}, {nombre: "equipo2"}];
 let partido = { fecha: "", hora: "", lugar: ""};
 let dataResponse;
 
@@ -12,6 +12,15 @@ Given(
     partido = { fecha, hora, lugar, equipos};
   }
 );
+
+Given("un usuario crea un partido con equipo1 {string} y equipo2 {string}", function(equipo1, equipo2) {
+  let hora = "19:00";
+  let fecha = "2020-12-01";
+  let lugar = "Libertadores de América";
+  equipos[0].nombre = equipo1;
+  equipos[1].nombre = equipo2;
+  partido = {fecha, hora, lugar, equipos};
+})
 
 When("guarda la información", async function () {
   await axios
@@ -23,6 +32,34 @@ When("guarda la información", async function () {
       dataResponse = error.response.data;
     });
 });
+
+Then("el partido queda definido con equipo1 {string} y equipo2 {string}", async function(nombreEquipo1, nombreEquipo2) {
+  let equipo1;
+  let equipo2;
+  await axios
+  .get(`http://localhost:8081/equipos/${dataResponse.equipo1_id}`)
+    .then((response) => {
+      equipo1 = response.data;
+    })
+    .catch((error) => {
+      console.log(error.response.data);
+    });
+    await axios
+    .get(`http://localhost:8081/equipos/${dataResponse.equipo2_id}`)
+    .then((response) => {
+      equipo2 = response.data;
+    })
+    .catch((error) => {
+      console.log(error.response.data);
+    });
+
+    assert.equal(equipo1.nombre, nombreEquipo1);
+    assert.equal(equipo2.nombre, nombreEquipo2);
+});
+
+Then("el partido no se crea por falta de nombres de equipo", function() {
+  assert.equal(dataResponse.message, "Los equipos son obligatorios");
+})
 
 Then(
   "el partido queda definido con fecha {string} hora {string} y lugar {string}",
