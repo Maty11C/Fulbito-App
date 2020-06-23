@@ -65,7 +65,10 @@
             type="text"
             required
             placeholder="Ingresá el nombre del equipo"
+            :state="esEquipo1Valido"
+            @input="validarEquipo1()"
           ></b-form-input>
+          <b-form-invalid-feedback id="equipo1">Ingresá un nombre de equipo</b-form-invalid-feedback>
         </b-form-group>
         <b-form-group id="input-group-1" label="Equipo 2:" label-for="equipo2">
           <b-form-input
@@ -74,7 +77,10 @@
             type="text"
             required
             placeholder="Ingresá el nombre del equipo"
+            :state="esEquipo2Valido"
+            @input="validarEquipo2()"
           ></b-form-input>
+          <b-form-invalid-feedback id="equipo2">Ingresá un nombre de equipo</b-form-invalid-feedback>
         </b-form-group>
       </b-form>
     </b-modal>
@@ -100,7 +106,9 @@ export default {
       },
       esFechaValida: null,
       esHoraValida: null,
-      esLugarValido: null
+      esLugarValido: null,
+      esEquipo1Valido: null,
+      esEquipo2Valido: null
     };
   },
   methods: {
@@ -113,6 +121,8 @@ export default {
       this.esFechaValida = null;
       this.esHoraValida = null;
       this.esLugarValido = null;
+      this.esEquipo1Valido = null;
+      this.esEquipo2Valido = null;
     },
     crear(bvModalEvt) {
       bvModalEvt.preventDefault();
@@ -145,7 +155,9 @@ export default {
       this.validarFecha();
       this.validarHora();
       this.validarLugar();
-      return this.esFechaValida && this.esHoraValida && this.esLugarValido;
+      this.validarEquipo1();
+      this.validarEquipo2();
+      return this.esFechaValida && this.esHoraValida && this.esLugarValido && this.esEquipo1Valido && this.esEquipo2Valido;
     },
     validarFecha() {
       this.esFechaValida = this.partido.fecha != "";
@@ -165,6 +177,12 @@ export default {
     },
     validarLugar() {
       this.esLugarValido = this.partido.lugar != "";
+    },
+    validarEquipo1() {
+      this.esEquipo1Valido = this.partido.equipos[0].nombre != "";
+    },
+    validarEquipo2() {
+      this.esEquipo2Valido = this.partido.equipos[1].nombre != "";
     }
   }
 };
