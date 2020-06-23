@@ -58,6 +58,24 @@
           ></b-form-input>
           <b-form-invalid-feedback id="lugar">Ingresá un lugar válido</b-form-invalid-feedback>
         </b-form-group>
+        <b-form-group id="input-group-1" label="Equipo 1:" label-for="equipo1">
+          <b-form-input
+            id="equipo1"
+            v-model="partido.equipos[0].nombre"
+            type="text"
+            required
+            placeholder="Ingresá el nombre del equipo"
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group id="input-group-1" label="Equipo 2:" label-for="equipo2">
+          <b-form-input
+            id="equipo2"
+            v-model="partido.equipos[1].nombre"
+            type="text"
+            required
+            placeholder="Ingresá el nombre del equipo"
+          ></b-form-input>
+        </b-form-group>
       </b-form>
     </b-modal>
   </div>
@@ -74,7 +92,11 @@ export default {
       partido: {
         fecha: "",
         hora: "",
-        lugar: ""
+        lugar: "",
+        equipos: [
+          { nombre: ''},
+          { nombre: ''}
+        ]
       },
       esFechaValida: null,
       esHoraValida: null,
@@ -86,6 +108,8 @@ export default {
       this.partido.fecha = "";
       this.partido.hora = "";
       this.partido.lugar = "";
+      this.partido.equipos[0].nombre = "";
+      this.partido.equipos[1].nombre = "";
       this.esFechaValida = null;
       this.esHoraValida = null;
       this.esLugarValido = null;
