@@ -2,7 +2,7 @@
   <b-modal
     id="modal-editar"
     title="Editar Partido"
-    @shown="buscarPartido"
+    @show="buscarPartido"
     @ok="editar"
     @close="limpiarCampos"
     ok-title="Editar"
@@ -182,10 +182,10 @@ export default {
       this.esLugarValido = this.partido.lugar != "";
     },
     validarEquipo1() {
-      this.esEquipo1Valido = this.partido.equipos[0].nombre != "";
+      this.esEquipo1Valido = this.partido.equipos[0].nombre.trim() != "";
     },
     validarEquipo2() {
-      this.esEquipo2Valido = this.partido.equipos[1].nombre != "";
+      this.esEquipo2Valido = this.partido.equipos[1].nombre.trim() != "";
     },
     buscarPartido() {
       let partido = this.$store.getters.obtenerPartidos.find(
