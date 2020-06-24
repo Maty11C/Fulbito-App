@@ -39,7 +39,7 @@ Then("la fecha del partido esta actualizada al {string}", async function (
       partidoActualizado = response.data;
     });
   assert.equal(dataResponse.message, "El partido se actualizó exitosamente");
-  assert.equal(partidoActualizado[0].fecha, fecha);
+  assert.equal(partidoActualizado.fecha, fecha);
 });
 
 Given("un partido ya creado con hora {string}", async function (hora) {
@@ -72,7 +72,7 @@ Then("la hora del partido está actualizada a {string}", async function (hora) {
       partidoActualizado = response.data;
     });
   assert.equal(dataResponse.message, "El partido se actualizó exitosamente");
-  assert.equal(partidoActualizado[0].hora, hora);
+  assert.equal(partidoActualizado.hora, hora);
 });
 
 Given("un partido ya creado con ubicación {string}", async function (lugar) {
@@ -107,7 +107,7 @@ Then("la ubicación del partido está actualizada a {string}", async function (
       partidoActualizado = response.data;
     });
   assert.equal(dataResponse.message, "El partido se actualizó exitosamente");
-  assert.equal(partidoActualizado[0].lugar, lugar);
+  assert.equal(partidoActualizado.lugar, lugar);
 });
 
 Then("el partido no se edita por fecha inválida", function () {
@@ -140,12 +140,17 @@ Given(
     let hora = "19:00";
     let lugar = "Libertadores de América";
     let fecha = "2020-12-01";
-    equipos[0].nombre = nombreEquipo1;
+    let equipos = [];  
+    equipo1 = {nombre: nombreEquipo1};
+    equipo2 = {nombre: nombreEquipo2};
+    equipos.push(equipo1);
+    equipos.push(equipo2);
     equipos[1].nombre = nombreEquipo2;
     partido = { fecha, hora, lugar, equipos };
     await axios
       .post("http://localhost:8081/partidos", partido)
-      .then((response) => (dataResponse = response.data));
+      .then((response) => (dataResponse = response.data))
+      .catch(error => console.log(error));
   }
 );
 
@@ -153,17 +158,15 @@ When(
   "edito el nombre de equipo por {string} y el otro equipo {string}",
   async function (nombreEquipo1, nombreEquipo2) {
     idPartido = dataResponse.id;
-    idEquipo1 = dataResponse.equipo1_id;
-    idEquipo2 = dataResponse.equipo2_id;
     equipos[0].nombre = nombreEquipo1;
     equipos[1].nombre = nombreEquipo2;
-    equipos[0].id = idEquipo1;
-    equipos[1].id = idEquipo2;
+    equipos[0].id = dataResponse.equipos[0].id;
+    equipos[1].id = dataResponse.equipos[1].id;
     partido = { equipos };
     await axios
       .put(`http://localhost:8081/partidos/${idPartido}`, partido)
       .then((response) => {
-        dataResponse = response.data;
+
       })
       .catch((error) => {
         dataResponse = error.response.data;
@@ -171,93 +174,48 @@ When(
   }
 );
 
-When(
-  "edito el nombre de algun equipo por {string}",
-  async function (nombreEquipo) {
-    idPartido = dataResponse.id;
-    idEquipo1 = dataResponse.equipo1_id;
-    idEquipo2 = dataResponse.equipo2_id;
-    equipos[0].nombre = nombreEquipo;
-    equipos[0].id = idEquipo1;
-    equipos[1].id = idEquipo2;
-    partido = { equipos };
-    await axios
-      .put(`http://localhost:8081/partidos/${idPartido}`, partido)
-      .then((response) => {
-        dataResponse = response.data;
-      })
-      .catch((error) => {
-        dataResponse = error.response.data;
-      });
-  }
-);
+When("edito el nombre de algun equipo por {string}", async function (
+  nombreEquipo
+) {
+  idPartido = dataResponse.id;
+  equipos[0].nombre = nombreEquipo;
+  equipos[0].id = dataResponse.equipos[0].id;
+  equipos[1].id = dataResponse.equipos[1].id;
+  partido = { equipos };
+  await axios
+    .put(`http://localhost:8081/partidos/${idPartido}`, partido)
+    .then(() => {})
+    .catch((error) => {
+      dataResponse = error.response.data;
+    });
+});
 
 Then(
   "el nombre del primer equipo cambia a {string} y el segundo cambia a {string}",
   async function (nombreEquipo1, nombreEquipo2) {
-    let equipo1;
-    let equipo2;
-    let idEquipo1;
-    let idEquipo2;
     await axios
       .get(`http://localhost:8081/partidos/${idPartido}`)
       .then((response) => {
-        this.idEquipo1 = response.data.equipo1_id;
-        this.idEquipo2 = response.data.equipo2_id;
-      })
-      .then(async function () {
-        await axios
-          .get(`http://localhost:8081/equipos/${this.idEquipo1}`)
-          .then((response) => {
-            equipo1 = response.data;
-          });
-        await axios
-          .get(`http://localhost:8081/equipos/${this.idEquipo2}`)
-          .then((response) => {
-            equipo2 = response.data;
-          });
-      })
-      .then(() => {
-        assert.equal(equipo1.nombre, nombreEquipo1);
-        assert.equal(equipo2.nombre, nombreEquipo2);
+        dataResponse = response.data;
       });
+    assert.equal(dataResponse.equipos[0].nombre, nombreEquipo1);
+    assert.equal(dataResponse.equipos[1].nombre, nombreEquipo2);
   }
 );
 
 Then(
   "el nombre del primer equipo es {string} y del segundo {string}",
   async function (nombreEquipo1, nombreEquipo2) {
-    let idEquipo1;
-    let idEquipo2;
     await axios
       .get(`http://localhost:8081/partidos/${idPartido}`)
       .then((response) => {
-        this.idEquipo1 = response.data.equipo1_id;
-        this.idEquipo2 = response.data.equipo2_id;
-      })
-      .then(async function () {
-        await axios
-          .get(`http://localhost:8081/equipos/${this.idEquipo1}`)
-          .then((response) => {
-            equipo1 = response.data;
-          });
-        await axios
-          .get(`http://localhost:8081/equipos/${this.idEquipo2}`)
-          .then((response) => {
-            equipo2 = response.data;
-          });
-      })
-      .then(() => {
-        assert.equal(
-          dataResponse.message,
-          "El nombre de ninguno de los equipos puede esta vacio"
-        );
-        assert.equal(equipo1.nombre, nombreEquipo1);
-        assert.equal(equipo2.nombre, nombreEquipo2);
+        dataResponse = response.data;
       });
+    assert.equal(dataResponse.equipos[0].nombre, nombreEquipo1);
+    assert.equal(dataResponse.equipos[1].nombre, nombreEquipo2);
   }
 );
 
-After(async function () {
-  await axios.delete("http://localhost:8081/partidos");
-});
+// After(async function () {
+//   await axios.delete("http://localhost:8081/partidos");
+// });

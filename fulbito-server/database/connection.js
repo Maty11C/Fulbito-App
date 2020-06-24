@@ -21,17 +21,8 @@ const Partido = partidoModel(sequelize, Sequelize);
 // Se crea la tabla equipo
 const Equipo = equipoModel(sequelize, Sequelize);
 
-Equipo.hasMany(Partido, {
-  foreignKey: "equipo1_id",
-  allowNull: false,
-  constraints: false
-});
 
-Equipo.hasMany(Partido, {
-  foreignKey: "equipo2_id",
-  allowNull: false,
-  constraints: false
-});
+Partido.hasMany(Equipo);
 
 sequelize.sync({ force: true }).then(() => {
   console.log(`Base de datos ${database} sincronizada`);

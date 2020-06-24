@@ -3,9 +3,12 @@ const moment = require("moment");
 const { Partido, Equipo } = require("../database/connection");
 
 exports.obtenerPartidoPorId = (req, res) => {
-  Partido.findAll({ where: { id: req.params.id } })
+  Partido.findAll({
+    where: { id: req.params.id },
+    include: [{ model: Equipo, as: "equipos" }],
+  })
     .then((data) => {
-      res.send(data);
+      res.send(data[0]);
     })
     .catch(() => {
       res.status(404).send({
@@ -15,7 +18,7 @@ exports.obtenerPartidoPorId = (req, res) => {
 };
 
 exports.obtenerTodosLosPartidos = (req, res) => {
-  Partido.findAll()
+  Partido.findAll({ include: [{ model: Equipo, as: "equipos" }] })
     .then((data) => {
       res.send(data);
     })
@@ -31,7 +34,7 @@ exports.crearPartido = (req, res) => {
   var fechaPartido = req.body.fecha;
   const horaPartido = req.body.hora;
   const lugarPartido = req.body.lugar;
-  const equipos = req.body.equipos;
+  const equiposPartido = req.body.equipos;
   if (fechaPartido === "") {
     res.status(400).send({
       message: "La fecha es obligatoria",
@@ -57,7 +60,7 @@ exports.crearPartido = (req, res) => {
     });
     return;
   }
-  if (!(equipos[0].nombre || equipos[1].nombre)) {
+  if (!(equiposPartido[0].nombre || equiposPartido[1].nombre)) {
     res.status(400).send({
       message: "Los equipos son obligatorios",
     });
@@ -68,38 +71,32 @@ exports.crearPartido = (req, res) => {
     fecha: fechaPartido,
     hora: horaPartido,
     lugar: lugarPartido,
+    equipos: equiposPartido,
   };
 
-  Equipo.create(equipos[0]).then((data) => {
-    partido.equipo1_id = data.dataValues.id;
-    Equipo.create(equipos[1])
-      .then((data) => {
-        partido.equipo2_id = data.dataValues.id;
-      })
-      .then(() => {
-        Partido.create(partido)
-          .then((data) => {
-            res.send(data);
-          })
-          .catch(() => {
-            res.status(500).send({
-              message: "No se pudo crear el partido",
-            });
-          });
+  Partido.create(partido, {
+    include: [Equipo],
+  })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch(() => {
+      res.status(500).send({
+        message: "No se pudo crear el partido",
       });
-  });
+    });
 };
 
 exports.editarPartido = (req, res) => {
   // Validaciones
-  let fechaPartido = req.body.fecha;
-  const horaPartido = req.body.hora;
-  const lugarPartido = req.body.lugar;
+  let fecha = req.body.fecha;
+  const hora = req.body.hora;
+  const lugar = req.body.lugar;
   const equipos = req.body.equipos;
   if (
-    fechaPartido === undefined &&
-    horaPartido === undefined &&
-    lugarPartido === undefined &&
+    fecha === undefined &&
+    hora === undefined &&
+    lugar === undefined &&
     equipos === undefined
   ) {
     res.status(400).send({
@@ -107,15 +104,15 @@ exports.editarPartido = (req, res) => {
     });
     return;
   }
-  if(equipos && (equipos[0].nombre === " " || equipos[1].nombre === " ")) {
+  if (equipos && (equipos[0].nombre === " " || equipos[1].nombre === " ")) {
     res.status(400).send({
       message: "El nombre de ninguno de los equipos puede esta vacio",
     });
     return;
   }
-  if (fechaPartido !== undefined) {
-    fechaPartido = moment(req.body.fecha, "YYYY-MM-DD").startOf("day");
-    if (fechaPartido.isBefore(moment().startOf("day"))) {
+  if (fecha !== undefined) {
+    fecha = moment(req.body.fecha, "YYYY-MM-DD").startOf("day");
+    if (fecha.isBefore(moment().startOf("day"))) {
       res.status(400).send({
         message: "La fecha es inválida",
       });
@@ -124,31 +121,37 @@ exports.editarPartido = (req, res) => {
   }
   // Actualizacion
   const partido = {
-    fecha: fechaPartido,
-    hora: horaPartido,
-    lugar: lugarPartido,
+    fecha,
+    hora,
+    lugar,
   };
 
-  Partido.update(partido, { where: { id: req.params.id } })
-    .then(() => {
-      if (equipos) {
-        Equipo.update(equipos[0], { where: { id: equipos[0].id } });
-        Equipo.update(equipos[1], { where: { id: equipos[1].id } });
-      }
-      res.send({
-        message: "El partido se actualizó exitosamente",
+  Partido.findAll({
+    where: { id: req.params.id },
+    include: [{ model: Equipo, as: "equipos" }],
+  }).then((filter) => {
+    let equiposAActualizar = equipos ? equipos : filter[0].dataValues.equipos;
+
+    Promise.all([
+      filter[0].update(partido),
+      filter[0].dataValues.equipos[0].update(equiposAActualizar[0]),
+      filter[0].dataValues.equipos[1].update(equiposAActualizar[1]),
+    ])
+      .then(() => {
+        res.send({
+          message: "El partido se actualizó exitosamente",
+        });
+      })
+      .catch(() => {
+        res.status(500).send({
+          message: "No se pudo editar el partido",
+        });
       });
-    })
-    .catch(() => {
-      res.status(500).send({
-        message: "No se pudo editar el partido",
-      });
-    });
+  });
 };
 
 exports.eliminarTodosLosPartidos = (req, res) => {
-  Equipo.destroy({ where: {}, truncate: true });
-  Partido.destroy({ where: {}, truncate: true })
+  Partido.destroy({ where: {}, truncate: true, include: [Equipo] })
     .then(() => {
       res.send({
         message: "Se eliminaron los partidos",

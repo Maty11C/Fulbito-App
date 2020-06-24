@@ -2,9 +2,9 @@
   <b-modal
     id="modal-editar"
     title="Editar Partido"
-    @show="buscarPartido"
+    @shown="buscarPartido"
     @ok="editar"
-    @hidden="limpiarCampos"
+    @close="limpiarCampos"
     ok-title="Editar"
     cancel-title="Cancelar"
     header-bg-variant="dark"
@@ -57,6 +57,30 @@
         ></b-form-input>
         <b-form-invalid-feedback id="lugar">Ingresá un lugar válido</b-form-invalid-feedback>
       </b-form-group>
+      <b-form-group id="input-group-1" label="Equipo 1:" label-for="equipo1">
+        <b-form-input
+          id="equipo1"
+          v-model="partido.equipos[0].nombre"
+          type="text"
+          required
+          placeholder="Ingresá el nombre del equipo"
+          :state="esEquipo1Valido"
+          @input="validarEquipo1()"
+        ></b-form-input>
+        <b-form-invalid-feedback id="equipo1">Ingresá un nombre de equipo</b-form-invalid-feedback>
+      </b-form-group>
+      <b-form-group id="input-group-1" label="Equipo 2:" label-for="equipo2">
+        <b-form-input
+          id="equipo2"
+          v-model="partido.equipos[1].nombre"
+          type="text"
+          required
+          placeholder="Ingresá el nombre del equipo"
+          :state="esEquipo2Valido"
+          @input="validarEquipo2()"
+        ></b-form-input>
+        <b-form-invalid-feedback id="equipo2">Ingresá un nombre de equipo</b-form-invalid-feedback>
+      </b-form-group>
     </b-form>
   </b-modal>
 </template>
@@ -72,11 +96,14 @@ export default {
       partido: {
         fecha: "",
         hora: "",
-        lugar: ""
+        lugar: "",
+        equipos: [{ nombre: "" }, { nombre: "" }]
       },
       esFechaValida: null,
       esHoraValida: null,
-      esLugarValido: null
+      esLugarValido: null,
+      esEquipo1Valido: null,
+      esEquipo2Valido: null
     };
   },
   props: ["idPartido"],
@@ -85,9 +112,9 @@ export default {
       this.partido.fecha = "";
       this.partido.hora = "";
       this.partido.lugar = "";
-      this.esFechaValida = null;
-      this.esHoraValida = null;
-      this.esLugarValido = null;
+      this.partido.equipos[0].nombre = "";
+      this.partido.equipos[1].nombre = "";
+      this.limpiarValidaciones();
     },
     editar(bvModalEvt) {
       bvModalEvt.preventDefault();
@@ -100,6 +127,7 @@ export default {
             partido.fecha = this.partido.fecha;
             partido.hora = this.partido.hora;
             partido.lugar = this.partido.lugar;
+            partido.equipos = this.partido.equipos;
             this.$store.commit("modificarPartido", partido);
             this.$bvModal.hide("modal-editar");
             this.$bvToast.toast("El partido se editó con éxito", {
@@ -124,7 +152,15 @@ export default {
       this.validarFecha();
       this.validarHora();
       this.validarLugar();
-      return this.esFechaValida && this.esHoraValida && this.esLugarValido;
+      this.validarEquipo1();
+      this.validarEquipo2();
+      return (
+        this.esFechaValida &&
+        this.esHoraValida &&
+        this.esLugarValido &&
+        this.esEquipo1Valido &&
+        this.esEquipo2Valido
+      );
     },
     validarFecha() {
       this.esFechaValida = this.partido.fecha != "";
@@ -145,6 +181,12 @@ export default {
     validarLugar() {
       this.esLugarValido = this.partido.lugar != "";
     },
+    validarEquipo1() {
+      this.esEquipo1Valido = this.partido.equipos[0].nombre != "";
+    },
+    validarEquipo2() {
+      this.esEquipo2Valido = this.partido.equipos[1].nombre != "";
+    },
     buscarPartido() {
       let partido = this.$store.getters.obtenerPartidos.find(
         partido => partido.id === this.idPartido
@@ -152,6 +194,15 @@ export default {
       this.partido.fecha = partido.fecha;
       this.partido.hora = partido.hora;
       this.partido.lugar = partido.lugar;
+      this.partido.equipos = partido.equipos;
+      this.limpiarValidaciones();
+    },
+    limpiarValidaciones() {
+      this.esFechaValida = null;
+      this.esHoraValida = null;
+      this.esLugarValido = null;
+      this.esEquipo1Valido = null;
+      this.esEquipo2Valido = null;
     }
   }
 };

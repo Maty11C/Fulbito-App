@@ -99,10 +99,7 @@ export default {
         fecha: "",
         hora: "",
         lugar: "",
-        equipos: [
-          { nombre: ''},
-          { nombre: ''}
-        ]
+        equipos: [{ nombre: "" }, { nombre: "" }]
       },
       esFechaValida: null,
       esHoraValida: null,
@@ -131,18 +128,18 @@ export default {
           .post("/partidos", JSON.stringify(this.partido))
           .then(response => {
             this.$bvModal.hide("modal-partido");
-            this.$store.commit('agregarPartido', response.data);
+            this.$store.commit("agregarPartido", response.data);
             this.$bvToast.toast("El partido se creó con éxito", {
-              title: 'Info',
-              variant: 'success',
+              title: "Info",
+              variant: "success",
               solid: true
             });
             this.limpiarCampos();
           })
           .catch(error => {
             this.$bvToast.toast(`${error.response.data}`, {
-              title: 'Error',
-              variant: 'danger',
+              title: "Error",
+              variant: "danger",
               solid: true
             });
           });
@@ -157,7 +154,13 @@ export default {
       this.validarLugar();
       this.validarEquipo1();
       this.validarEquipo2();
-      return this.esFechaValida && this.esHoraValida && this.esLugarValido && this.esEquipo1Valido && this.esEquipo2Valido;
+      return (
+        this.esFechaValida &&
+        this.esHoraValida &&
+        this.esLugarValido &&
+        this.esEquipo1Valido &&
+        this.esEquipo2Valido
+      );
     },
     validarFecha() {
       this.esFechaValida = this.partido.fecha != "";
