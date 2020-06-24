@@ -92,17 +92,24 @@ exports.crearPartido = (req, res) => {
 
 exports.editarPartido = (req, res) => {
   // Validaciones
-  var fechaPartido = req.body.fecha;
+  let fechaPartido = req.body.fecha;
   const horaPartido = req.body.hora;
   const lugarPartido = req.body.lugar;
   const equipos = req.body.equipos;
   if (
     fechaPartido === undefined &&
     horaPartido === undefined &&
-    lugarPartido === undefined
+    lugarPartido === undefined &&
+    equipos === undefined
   ) {
     res.status(400).send({
       message: "Se debe ingresar al menos un campo para actualizar",
+    });
+    return;
+  }
+  if(equipos && (equipos[0].nombre === " " || equipos[1].nombre === " ")) {
+    res.status(400).send({
+      message: "El nombre de ninguno de los equipos puede esta vacio",
     });
     return;
   }
@@ -124,6 +131,10 @@ exports.editarPartido = (req, res) => {
 
   Partido.update(partido, { where: { id: req.params.id } })
     .then(() => {
+      if (equipos) {
+        Equipo.update(equipos[0], { where: { id: equipos[0].id } });
+        Equipo.update(equipos[1], { where: { id: equipos[1].id } });
+      }
       res.send({
         message: "El partido se actualizó exitosamente",
       });

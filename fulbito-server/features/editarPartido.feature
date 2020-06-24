@@ -27,3 +27,13 @@ Feature: Editar datos basicos de un partido
         Given un partido ya creado con fecha '2020-12-01'
         When edito el partido y no ingreso un campo
         Then el partido no se edita por falta de campos
+
+    Scenario: Edicion de nombres de equipo de un partido
+        Given un partido ya creado con el equipo con nombre "Los bosteros" y el equipo con nombre "Las gallinas"
+        When edito el nombre de equipo por "Los canallas" y el otro equipo "El taladro"
+        Then el nombre del primer equipo cambia a "Los canallas" y el segundo cambia a "El taladro"
+    
+    Scenario: Edicion de nombres de equipo de un partido por vacio
+        Given un partido ya creado con el equipo con nombre "Los bosteros" y el equipo con nombre "Las gallinas"
+        When edito el nombre de algun equipo por " "
+        Then el nombre del primer equipo es "Los bosteros" y del segundo "Las gallinas"
