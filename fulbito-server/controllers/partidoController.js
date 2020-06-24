@@ -60,7 +60,7 @@ exports.crearPartido = (req, res) => {
     });
     return;
   }
-  if (!(equiposPartido[0].nombre || equiposPartido[1].nombre)) {
+  if ((equiposPartido[0].nombre.trim() === "" || equiposPartido[1].nombre.trim() === "")) {
     res.status(400).send({
       message: "Los equipos son obligatorios",
     });
@@ -104,7 +104,7 @@ exports.editarPartido = (req, res) => {
     });
     return;
   }
-  if (equipos && (equipos[0].nombre === " " || equipos[1].nombre === " ")) {
+  if (equipos && (equipos[0].nombre.trim() === "" || equipos[1].nombre.trim() === "")) {
     res.status(400).send({
       message: "El nombre de ninguno de los equipos puede esta vacio",
     });
