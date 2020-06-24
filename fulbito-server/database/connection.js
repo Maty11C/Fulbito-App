@@ -24,7 +24,7 @@ const Equipo = equipoModel(sequelize, Sequelize);
 
 Partido.hasMany(Equipo);
 
-sequelize.sync({ force: true }).then(() => {
+sequelize.sync({ force: false }).then(() => {
   console.log(`Base de datos ${database} sincronizada`);
 });
 
