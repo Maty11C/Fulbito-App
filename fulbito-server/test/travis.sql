@@ -1,6 +1,6 @@
 -- Create user
 CREATE USER 'fulbito'@'localhost' IDENTIFIED BY 'fulbito';
-GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP ON *.* TO 'fulbito'@'localhost';
+GRANT ALL PRIVILEGES ON *.* TO 'fulbito'@'localhost';
 FLUSH PRIVILEGES;
 
 -- Create database
