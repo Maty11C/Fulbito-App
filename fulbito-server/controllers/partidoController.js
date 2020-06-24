@@ -57,7 +57,7 @@ exports.crearPartido = (req, res) => {
     });
     return;
   }
-  if(!(equipos[0].nombre || equipos[1].nombre)) {
+  if (!(equipos[0].nombre || equipos[1].nombre)) {
     res.status(400).send({
       message: "Los equipos son obligatorios",
     });
@@ -72,22 +72,22 @@ exports.crearPartido = (req, res) => {
 
   Equipo.create(equipos[0]).then((data) => {
     partido.equipo1_id = data.dataValues.id;
-  });
-  Equipo.create(equipos[1])
-    .then((data) => {
-      partido.equipo2_id = data.dataValues.id;
-    })
-    .then(() => {
-      Partido.create(partido)
-        .then((data) => {
-          res.send(data);
-        })
-        .catch(() => {
-          res.status(500).send({
-            message: "No se pudo crear el partido",
+    Equipo.create(equipos[1])
+      .then((data) => {
+        partido.equipo2_id = data.dataValues.id;
+      })
+      .then(() => {
+        Partido.create(partido)
+          .then((data) => {
+            res.send(data);
+          })
+          .catch(() => {
+            res.status(500).send({
+              message: "No se pudo crear el partido",
+            });
           });
-        });
-    });
+      });
+  });
 };
 
 exports.editarPartido = (req, res) => {
