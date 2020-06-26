@@ -1,41 +1,26 @@
-const { Equipo } = require("../database/connection");
+const { Equipo, Usuario } = require("../database/connection");
 
 exports.obtenerEquipoPorId = (req, res) => {
-    Equipo.findAll({ where: { id: req.params.id } })
-      .then((data) => {
-        res.send(data[0]);
-      })
-      .catch(() => {
-        res.status(404).send({
-          message: "No se encontró el equipo",
-        });
-      });
-  };
-
-exports.agregarJugadorAEquipo = (req, res) => {
-  console.log(req)
-  let equipo = {
-    id: req.params.idEquipo,
-    jugadores: [
-      {
-        id: req.body.idUsuario
-      }
-    ]
-  }
-  Equipo.create(equipo, {
-    include: [{
-      model: Usuario, 
-      as: 'jugadores'
-    }],
-  })
+  Equipo.findAll({ where: { id: req.params.id } })
     .then((data) => {
-      res.send(data);
+      res.send(data[0]);
     })
     .catch(() => {
-      res.status(500).send({
-        message: "No se pudo agregar el jugador al equipo",
+      res.status(404).send({
+        message: "No se encontró el equipo",
       });
     });
+};
+
+exports.agregarJugadorAEquipo = (req, res) => {
+  Equipo.findAll({
+    where: { id: req.params.idEquipo },
+    include: [{ model: Usuario, as: "usuarios" }],
+  })
+    .then((filter) => {
+      // filter[0].dataValues.usuarios.update([{id: req.body.idUsuario}]);
+    })
+    .catch((error) => {console.log(error)});
   // Equipo.findAll({
   //   where: { id: req.params.idEquipo },
   //   include: [{ model: Usuario, as: "jugadores" }],
@@ -58,4 +43,4 @@ exports.agregarJugadorAEquipo = (req, res) => {
   //       });
   //     });
   // });
-}
+};

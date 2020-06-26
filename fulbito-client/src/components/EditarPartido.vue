@@ -2,7 +2,7 @@
   <b-modal
     id="modal-editar"
     title="Editar Partido"
-    @show="buscarPartido"
+    @shown="buscarPartido"
     @ok="editar"
     @close="limpiarCampos"
     ok-title="Editar"
