@@ -150,7 +150,6 @@ Given(
     await axios
       .post("http://localhost:8081/partidos", partido)
       .then((response) => (dataResponse = response.data))
-      .catch(error => console.log(error));
   }
 );
 
