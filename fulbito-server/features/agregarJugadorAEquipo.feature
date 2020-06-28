@@ -4,9 +4,9 @@ Feature: Agregar jugador a equipo
     Para que participe del encuentro
 
     Scenario: Agregar correctamente un usuario a un equipo
-        Given el usuario con id 1 registrado en el sistema
+        Given un usuario registrado en el sistema
         When lo agrego al equipo
-        Then el usuario con id 1 forma parte del equipo con id 1
+        Then el usuario forma parte del equipo
 
 
 

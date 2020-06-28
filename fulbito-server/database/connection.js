@@ -27,8 +27,8 @@ const Usuario = usuarioModel(sequelize, Sequelize);
 //Relaciones
 Partido.hasMany(Equipo);
 
-Usuario.belongsToMany(Equipo, { through: 'jugadores', timestamps: false })
-Equipo.belongsToMany(Usuario, { through: 'jugadores', timestamps: false })
+Usuario.belongsToMany(Equipo, { through: 'usuario_equipo', timestamps: false })
+Equipo.belongsToMany(Usuario, { through: 'usuario_equipo', timestamps: false })
 
 sequelize.sync({ force: false }).then(() => {
   console.log(`Base de datos ${database} sincronizada`);

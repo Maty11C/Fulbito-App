@@ -6,60 +6,54 @@ const { Usuario } = require("../../database/connection");
 
 let equipos = [{ nombre: "" }, { nombre: "" }];
 let partido = { fecha: "", hora: "", lugar: "", equipos: [] };
-let idEquipo;
-let idUsuarioCreado;
-
 let dataResponse;
+let partidoCreado;
+let usuarioCreado;
 
 Before(async function () {
-    // let hora = "19:00";
-    // let fecha = "2020-12-01";
-    // let lugar = "Libertadores de América";
-    // equipos[0].nombre = "Casados";
-    // equipos[1].nombre = "Solteros";
-    // partido = { fecha, hora, lugar, equipos };
+  let hora = "19:00";
+  let fecha = "2020-12-01";
+  let lugar = "Libertadores de América";
+  equipos[0].nombre = "Casados";
+  equipos[1].nombre = "Solteros";
+  partido = { fecha, hora, lugar, equipos };
 
-    // await axios
-    // .post("http://localhost:8081/partidos", partido)
-    // .then((response) => {
-    //   idEquipo = response.data.equipos[0].id;
-    //   console.log(idEquipo)
-    // })
-    // .catch((error) => {
-    //   dataResponse = error.response.data;
-    // });
+  partidoCreado = await axios.post("http://localhost:8081/partidos", partido);
 });
 
-Given(
-    "el usuario con id {int} registrado en el sistema",
-    function (idUsuario) {  
-        // const usuario = { nombre: 'pepito' }
-        // Usuario.create(usuario)
-        //     .then((data) => {
-        //       idUsuarioCreado = data.dataValues.id
-        //       console.log(idUsuarioCreado)
-        //     })
-        //     .catch(() => {
-              
-        //     });
-    }
-  );
-  
+Given("un usuario registrado en el sistema", async function () {
+  usuarioCreado = await Usuario.create({ nombre: "pepito" });
+});
+
 When("lo agrego al equipo", async function () {
-  // const jugador = { idUsuario: idUsuarioCreado }
-  // await axios
-  //   .post(`http://localhost:8081/equipos/${idEquipo}`, jugador)
-  //   .then((response) => {
-  //     dataResponse = response.data;
-  //   })
-  //   .catch((error) => {
-  //     dataResponse = error.response.data;
-  //   });
+  const body = { idUsuario: usuarioCreado.dataValues.id };
+  await axios
+    .post(
+      `http://localhost:8081/equipos/${partidoCreado.data.equipos[0].id}`,
+      body
+    )
+    .then((response) => {
+      dataResponse = response.data;
+    })
+    .catch((error) => {
+      dataResponse = error.response.data;
+    });
 });
 
-Then(
-  "el usuario con id {int} forma parte del equipo con id {int}",
-  async function (idUsuario, idEquipo) {
-    
-  }
-);
+Then("el usuario forma parte del equipo", async function () {
+  await axios
+    .get(`http://localhost:8081/equipos/${partidoCreado.data.equipos[0].id}`)
+    .then((response) => {
+      dataResponse = response.data;
+    })
+    .catch((error) => {
+      dataResponse = error.response.data;
+    });
+
+  assert.equal(
+    dataResponse.usuarios.some(
+      (usuario) => usuario.id === usuarioCreado.dataValues.id
+    ),
+    true
+  );
+});
