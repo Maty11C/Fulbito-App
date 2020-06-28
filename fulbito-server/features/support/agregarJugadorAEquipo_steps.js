@@ -40,6 +40,25 @@ When("lo agrego al equipo", async function () {
     });
 });
 
+// When("lo agrego a un equipo y quiero agregarlo al otro", async function () {
+//   const body = { idUsuario: usuarioCreado.dataValues.id };
+//   await axios
+//     .post(
+//       `http://localhost:8081/equipos/${partidoCreado.data.equipos[0].id}`,
+//       body
+//     );
+  
+//   await axios
+//     .post(
+//       `http://localhost:8081/equipos/${partidoCreado.data.equipos[1].id}`,
+//       body
+//     )
+//     .catch((error) => {
+//       console.log(error);
+//       dataResponse = error.response.data;
+//     });
+// });
+
 Then("el usuario forma parte del equipo", async function () {
   await axios
     .get(`http://localhost:8081/equipos/${partidoCreado.data.equipos[0].id}`)
@@ -57,3 +76,7 @@ Then("el usuario forma parte del equipo", async function () {
     true
   );
 });
+
+// Then("el usuario no se agrega dos veces", function() {
+//   assert.equal(dataResponse.message("El equipo no puede pertenecer a los dos equipos"))
+// })
