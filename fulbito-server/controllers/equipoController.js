@@ -18,6 +18,7 @@ exports.obtenerEquipoPorId = (req, res) => {
 exports.agregarJugadorAEquipo = async (req, res) => {
   let equipo = await Equipo.findOne({
     where: { id: req.params.idEquipo },
+    include: [{model: Usuario, as: "usuarios"}]
   });
 
   let usuario = await Usuario.findOne({
@@ -33,8 +34,13 @@ exports.agregarJugadorAEquipo = async (req, res) => {
     partido[0].dataValues.equipos,
     req.params.idEquipo
   );
+  console.log("Cantidad Equipos", equipo.dataValues.usuarios);
 
-  if (await usuarioEstaEnElEquipo(equipo, usuario)) {
+  if (equipo.dataValues.usuarios.length === 5) {
+    res.status(400).send({
+      message: "El equipo ya esta completo",
+    });
+  } else if (await usuarioEstaEnElEquipo(equipo, usuario)) {
     res.status(400).send({
       message: "El usuario ya se encuentra en el equipo",
     });

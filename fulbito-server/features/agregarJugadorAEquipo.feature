@@ -18,5 +18,10 @@ Feature: Agregar jugador a equipo
         When lo agrego a un equipo y quiero agregarlo al mismo nuevamente
         Then el usuario no se agrega dos veces al mismo equipo
 
+    Scenario: No agregar un usuario a un equipo si ya tiene 5 jugadores
+        Given un usuario registrado en el sistema y un equipo completo
+        When lo agrego al equipo
+        Then el usuario no se agrega a un equipo completo
+
 
 

@@ -2,7 +2,7 @@ const { Given, When, Then, Before, After } = require("cucumber");
 const axios = require("axios");
 const assert = require("assert");
 
-const { Usuario } = require("../../database/connection");
+const { Usuario, Equipo } = require("../../database/connection");
 
 let equipos = [{ nombre: "" }, { nombre: "" }];
 let partido = { fecha: "", hora: "", lugar: "", equipos: [] };
@@ -23,6 +23,24 @@ Before(async function () {
 
 Given("un usuario registrado en el sistema", async function () {
   usuarioCreado = await Usuario.create({ nombre: "pepito" });
+});
+
+Given("un usuario registrado en el sistema y un equipo completo", async function () {
+  usuarioCreado = await Usuario.create({ nombre: "pepito" });
+  
+  let usuarioEquipo1 = await Usuario.create({ nombre: "pepito" });
+  let usuarioEquipo2 = await Usuario.create({ nombre: "pepito" });
+  let usuarioEquipo3 = await Usuario.create({ nombre: "pepito" });
+  let usuarioEquipo4 = await Usuario.create({ nombre: "pepito" });
+  let usuarioEquipo5 = await Usuario.create({ nombre: "pepito" });
+
+  let equipo = await Equipo.findOne({where:{id: partidoCreado.data.equipos[0].id}});
+
+  await equipo.addUsuario(usuarioEquipo1);
+  await equipo.addUsuario(usuarioEquipo2);
+  await equipo.addUsuario(usuarioEquipo3);
+  await equipo.addUsuario(usuarioEquipo4);
+  await equipo.addUsuario(usuarioEquipo5);
 });
 
 When("lo agrego al equipo", async function () {
@@ -100,4 +118,8 @@ Then("el usuario no se agrega dos veces", function() {
 
 Then("el usuario no se agrega dos veces al mismo equipo", function() {
   assert.equal(dataResponse.message,"El usuario ya se encuentra en el equipo")
+})
+
+Then("el usuario no se agrega a un equipo completo", function() {
+  assert.equal(dataResponse.message,"El equipo ya esta completo")
 })
