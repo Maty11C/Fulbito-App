@@ -20,7 +20,7 @@ exports.agregarJugadorAEquipo = async (req, res) => {
     where: { id: req.params.idEquipo },
   });
 
-  let usuario = await Usuario.findAll({
+  let usuario = await Usuario.findOne({
     where: { id: req.body.idUsuario },
   });
 
@@ -34,16 +34,10 @@ exports.agregarJugadorAEquipo = async (req, res) => {
     req.params.idEquipo
   );
 
-  console.log(
-    "verificacion usuario esta en el otro equipo: ",
-    await usuarioEstaEnElOtroEquipo(otroEquipo, usuario)
-  );
-
   if (await usuarioEstaEnElOtroEquipo(otroEquipo, usuario)) {
     res.status(400).send({
-      mensaje: "El equipo no puede pertenecer a los dos equipos",
+      message: "El equipo no puede pertenecer a los dos equipos",
     });
-    return;
   } else {
     equipo
       .addUsuario(usuario)
@@ -62,10 +56,11 @@ async function usuarioEstaEnElOtroEquipo(equipo, usuarioAInsertar) {
     include: [{ model: Usuario, as: "usuarios" }],
   });
 
-  return otroEquipo.dataValues.usuarios.lenght > 0
+  return otroEquipo.dataValues.usuarios.length > 0
     ? otroEquipo.dataValues.usuarios.some(
-        (usuario) => usuario.dataValues.id === usuarioAInsertar.dataValues.id
-      )
+        (usuario) => {
+          return usuario.dataValues.id === usuarioAInsertar.dataValues.id
+        })
     : false;
 }
 
