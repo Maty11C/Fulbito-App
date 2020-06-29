@@ -4,19 +4,10 @@
       <b-navbar-brand href="#">Fulbito App</b-navbar-brand>
     </b-navbar>
     <div id="nav">
-      <home></home>
+      <router-view></router-view>
     </div>
   </div>
 </template>
-
-<script>
-import Home from "./views/Home";
-export default {
-  components: {
-    Home
-  }
-};
-</script>
 
 <style>
 #app {
