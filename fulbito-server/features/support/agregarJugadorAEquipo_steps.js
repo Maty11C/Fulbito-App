@@ -58,6 +58,24 @@ When("lo agrego a un equipo y quiero agregarlo al otro", async function () {
     });
 });
 
+When("lo agrego a un equipo y quiero agregarlo al mismo nuevamente", async function () {
+  const body = { idUsuario: usuarioCreado.dataValues.id };
+  await axios
+    .post(
+      `http://localhost:8081/equipos/${partidoCreado.data.equipos[0].id}`,
+      body
+    );
+  
+  await axios
+    .post(
+      `http://localhost:8081/equipos/${partidoCreado.data.equipos[0].id}`,
+      body
+    )
+    .catch((error) => {
+      dataResponse = error.response.data;
+    });
+});
+
 Then("el usuario forma parte del equipo", async function () {
   await axios
     .get(`http://localhost:8081/equipos/${partidoCreado.data.equipos[0].id}`)
@@ -77,5 +95,9 @@ Then("el usuario forma parte del equipo", async function () {
 });
 
 Then("el usuario no se agrega dos veces", function() {
-  assert.equal(dataResponse.message,"El equipo no puede pertenecer a los dos equipos")
+  assert.equal(dataResponse.message,"El usuario no puede pertenecer a los dos equipos")
+})
+
+Then("el usuario no se agrega dos veces al mismo equipo", function() {
+  assert.equal(dataResponse.message,"El usuario ya se encuentra en el equipo")
 })

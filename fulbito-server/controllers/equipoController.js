@@ -34,9 +34,13 @@ exports.agregarJugadorAEquipo = async (req, res) => {
     req.params.idEquipo
   );
 
-  if (await usuarioEstaEnElOtroEquipo(otroEquipo, usuario)) {
+  if (await usuarioEstaEnElEquipo(equipo, usuario)) {
     res.status(400).send({
-      message: "El equipo no puede pertenecer a los dos equipos",
+      message: "El usuario ya se encuentra en el equipo",
+    });
+  } else if (await usuarioEstaEnElEquipo(otroEquipo, usuario)) {
+    res.status(400).send({
+      message: "El usuario no puede pertenecer a los dos equipos",
     });
   } else {
     equipo
@@ -50,17 +54,16 @@ exports.agregarJugadorAEquipo = async (req, res) => {
   }
 };
 
-async function usuarioEstaEnElOtroEquipo(equipo, usuarioAInsertar) {
+async function usuarioEstaEnElEquipo(equipo, usuarioAInsertar) {
   let otroEquipo = await Equipo.findOne({
     where: { id: equipo.dataValues.id },
     include: [{ model: Usuario, as: "usuarios" }],
   });
 
   return otroEquipo.dataValues.usuarios.length > 0
-    ? otroEquipo.dataValues.usuarios.some(
-        (usuario) => {
-          return usuario.dataValues.id === usuarioAInsertar.dataValues.id
-        })
+    ? otroEquipo.dataValues.usuarios.some((usuario) => {
+        return usuario.dataValues.id === usuarioAInsertar.dataValues.id;
+      })
     : false;
 }
 
