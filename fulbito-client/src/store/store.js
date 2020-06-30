@@ -6,11 +6,15 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     partidos: [],
+    usuarios: []
   },
   getters: {
     obtenerPartidos: (state) => {
       return state.partidos;
     },
+    obtenerUsuarios: (state) => {
+      return state.usuarios;
+    }
   },
   mutations: {
     setearPartidos(state, partidos) {
@@ -23,5 +27,8 @@ export default new Vuex.Store({
       let index = state.partidos.findIndex((p) => p.id === partido.id);
       state.partidos.splice(index, 1, partido);
     },
+    setearUsuarios(state, usuarios) {
+      state.usuarios = usuarios;
+    }
   },
 });
