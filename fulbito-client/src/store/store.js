@@ -6,7 +6,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     partidos: [],
-    usuarios: []
+    usuarios: [],
+    partido: {}
   },
   getters: {
     obtenerPartidos: (state) => {
@@ -14,6 +15,12 @@ export default new Vuex.Store({
     },
     obtenerUsuarios: (state) => {
       return state.usuarios;
+    },
+    obtenerPrimerEquipo: (state) => {
+      return state.partido.equipos[0]
+    },
+    obtenerSegundoEquipo: (state) => {
+      return state.partido.equipos[1]
     }
   },
   mutations: {
@@ -29,6 +36,9 @@ export default new Vuex.Store({
     },
     setearUsuarios(state, usuarios) {
       state.usuarios = usuarios;
+    },
+    setearPartido(state, partido) {
+      state.partido = partido
     }
   },
 });

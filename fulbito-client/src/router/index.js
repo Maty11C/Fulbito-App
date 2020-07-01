@@ -12,7 +12,7 @@ Vue.use(VueRouter)
     component: Home
   },
   {
-    path: "/partido",
+    path: "/partido/:idPartido",
     name: "Partido",
     component: Partido
   }
