@@ -7,7 +7,9 @@ export default new Vuex.Store({
   state: {
     partidos: [],
     usuarios: [],
-    partido: {}
+    partido: {},
+    jugadoresPrimerEquipo: [],
+    jugadoresSegundoEquipo: []
   },
   getters: {
     obtenerPartidos: (state) => {
@@ -17,10 +19,24 @@ export default new Vuex.Store({
       return state.usuarios;
     },
     obtenerPrimerEquipo: (state) => {
-      return state.partido.equipos[0]
+      return state.partido.equipos ? state.partido.equipos[0] : [];
     },
     obtenerSegundoEquipo: (state) => {
-      return state.partido.equipos[1]
+      return state.partido.equipos ? state.partido.equipos[1] : [];
+    },
+    obtenerJugadoresPrimerEquipo: (state) => {
+      return state.jugadoresPrimerEquipo;
+    },
+    obtenerJugadoresSegundoEquipo: (state) => {
+      return state.jugadoresSegundoEquipo;
+    },
+    obtenerIdPrimerEquipoDePartido(state,idPartido) {
+      let partido = state.partidos.find(partido => partido.id === idPartido);
+      console.log(partido);
+      return 1;
+    },
+    obtenerIdSegundoEquipoDePartido(state, idPartido) {
+      return state.partidos.find(partido => partido.id === idPartido).equipos[0];
     }
   },
   mutations: {
@@ -39,6 +55,19 @@ export default new Vuex.Store({
     },
     setearPartido(state, partido) {
       state.partido = partido
+    },
+    setearJugadoresEnPrimerEquipo(state, jugadores) {
+      state.jugadoresPrimerEquipo = jugadores;
+    },
+    setearJugadoresEnSegundoEquipo(state, jugadores) {
+      state.jugadoresSegundoEquipo = jugadores;
+    },
+    setearJugadorEnEquipo(state, datos) {
+      if(state.partido.equipos[0].id === datos.idEquipo) {
+        state.jugadoresPrimerEquipo.push(datos.usuarioAgregado);
+      } else {
+        state.jugadoresSegundoEquipo.push(datos.usuarioAgregado);
+      }
     }
   },
 });

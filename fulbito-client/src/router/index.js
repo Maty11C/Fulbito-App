@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import Partido from '../views/Partido.vue'
+import Equipo from '../views/Equipo.vue'
 
 Vue.use(VueRouter)
 
@@ -12,14 +12,13 @@ Vue.use(VueRouter)
     component: Home
   },
   {
-    path: "/partido/:idPartido",
-    name: "Partido",
-    component: Partido
+    path: "/equipo/:idPartido",
+    name: "Equipo",
+    component: Equipo
   }
 ]
 
 const router = new VueRouter({
-  mode: 'history',
   base: process.env.BASE_URL,
   routes
 })

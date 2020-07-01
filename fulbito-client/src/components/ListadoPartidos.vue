@@ -27,7 +27,16 @@
               </p>
             </b-card-text>
 
-            <b-button v-b-modal.modal-editar variant="success" @click="setearIdPartido(partido.id)">Editar</b-button>
+            <b-button
+              v-b-modal.modal-editar
+              variant="success"
+              @click="setearIdPartido(partido.id)"
+              class="mr-2"
+            >Editar</b-button>
+            <b-button
+              variant="info"
+              @click="verPaginaArmarEquipos(partido.id)"
+            >Armar equipos</b-button>
           </b-card>
         </b-col>
       </template>
@@ -45,7 +54,7 @@ export default {
   data() {
     return {
       idPartido: ""
-    }
+    };
   },
   components: {
     EditarPartido
@@ -60,8 +69,10 @@ export default {
         .format("DD MMM YYYY");
     },
     horaFormateada(hora) {
-      return moment(hora, "HH:mm:ss")
-      .format("HH:mm [hs]")
+      return moment(hora, "HH:mm:ss").format("HH:mm [hs]");
+    },
+    verPaginaArmarEquipos(idPartido) {
+      this.$router.push({path: `/equipo/${idPartido}`});
     }
   },
   computed: {
