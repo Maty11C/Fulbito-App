@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-card header="Usuarios">
+    <b-card header="Usuarios" class="col-md-6">
       <table class="table col-md-3">
         <tr v-for="usuario in usuarios" v-bind:key="usuario.id" v-bind:title="usuario.nombre">
           <td class="text-left">{{usuario.nombre}}</td>
@@ -8,7 +8,6 @@
             <b-button v-on:click="agregarJugadorAEquipo(usuario.id, primerEquipo.id)">
               Agregar a {{primerEquipo.nombre}}
             </b-button>
-            <br>
             <b-button v-on:click="agregarJugadorAEquipo(usuario.id, segundoEquipo.id)">
               Agregar a {{segundoEquipo.nombre}}
             </b-button>
@@ -38,11 +37,19 @@ export default {
   methods: {
     agregarJugadorAEquipo(idUsuario, idEquipo) {
       api().post(`equipos/${idEquipo}`, { idUsuario })
-        .then((response) => {
-          console.log(response.data);
+        .then(() => {
+          this.$bvToast.toast("El jugador se agregó al equipo con éxito", {
+              title: "Info",
+              variant: "success",
+              solid: true
+          });
         })
         .catch((error) => {
-          console.log(error.response.data);
+          this.$bvToast.toast(`${error.response.data.message}`, {
+              title: "Error",
+              variant: "danger",
+              solid: true
+          });
         });
     }
   }
