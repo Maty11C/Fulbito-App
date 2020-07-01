@@ -20,7 +20,7 @@ export default {
             .catch(error => console.log(error.response.message));
 
         //Se obtienen los usuarios
-        api().get('usuarios')
+        await api().get('usuarios')
             .then(response => this.$store.commit("setearUsuarios", response.data))
             .catch(error => console.log(error.response.message));
     },

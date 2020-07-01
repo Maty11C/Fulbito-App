@@ -13,10 +13,5 @@ Vue.use(IconsPlugin);
 new Vue({
   store: store,
   render: (h) => h(App),
-  router,
-  watch: {
-    '$route': function() {
-      this.show = false;
-    }
-  }
+  router
 }).$mount("#app");

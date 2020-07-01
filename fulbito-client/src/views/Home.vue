@@ -3,8 +3,8 @@
     <crear-partido />
     <listado-partidos v-if="this.$store.getters.obtenerPartidos.length" />
     <b-alert v-else show variant="success" class="mt-3">
-      No existen partidos por el momento 
-      <b-icon icon="emoji-frown" font-scale="1.8" animation="fade"/>
+      No existen partidos por el momento
+      <b-icon icon="emoji-frown" font-scale="1.8" animation="fade" />
     </b-alert>
   </div>
 </template>
@@ -20,8 +20,8 @@ export default {
     CrearPartido,
     ListadoPartidos
   },
-  mounted() {
-    api()
+  mounted: async function() {
+    await api()
       .get("/partidos")
       .then(response => this.$store.commit("setearPartidos", response.data))
       .catch(error => console.log(error.responde.message));

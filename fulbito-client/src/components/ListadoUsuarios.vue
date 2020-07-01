@@ -17,18 +17,8 @@
         >Agregar a {{segundoEquipo.nombre}}</b-button>
       </div>
       <div class="col-md-4">
-        <b-list-group class="col-md-12">
-          <b-list-group-item variant="success">{{primerEquipo.nombre}}</b-list-group-item>
-          <template v-for="jugador in jugadoresPrimerEquipo">
-            <b-list-group-item :key="jugador.value">{{jugador.text}}</b-list-group-item>
-          </template>
-        </b-list-group>
-        <b-list-group class="col-md-12 mt-3">
-          <b-list-group-item variant="danger">{{segundoEquipo.nombre}}</b-list-group-item>
-          <template v-for="jugador in jugadoresSegundoEquipo">
-            <b-list-group-item :key="jugador.value">{{jugador.text}}</b-list-group-item>
-          </template>
-        </b-list-group>
+        <listado-equipo :equipo="primerEquipo" variant="success" :esPrimerEquipo="true" />
+        <listado-equipo class="mt-3" :equipo="segundoEquipo" variant="danger" :esPrimerEquipo="false" />
       </div>
     </div>
   </div>
@@ -36,34 +26,15 @@
 
 <script>
 import api from "../services/api";
+import ListadoEquipo from "./ListadoEquipo";
 
 export default {
   name: "listado-usuarios",
+  components: { ListadoEquipo },
   data() {
     return {
       selected: {}
     };
-  },
-  mounted() {
-    api()
-      .get(`equipos/${this.primerEquipo.id}`)
-      .then(response =>
-        this.$store.commit(
-          "setearJugadoresEnPrimerEquipo",
-          this.armarEquipos(response.data.usuarios)
-        )
-      )
-      .catch(error => console.log(error));
-
-    api()
-      .get(`equipos/${this.segundoEquipo.id}`)
-      .then(response =>
-        this.$store.commit(
-          "setearJugadoresEnSegundoEquipo",
-          this.armarEquipos(response.data.usuarios)
-        )
-      )
-      .catch(error => console.log(error));
   },
   computed: {
     usuarios() {
@@ -77,12 +48,6 @@ export default {
     },
     segundoEquipo() {
       return this.$store.getters.obtenerSegundoEquipo;
-    },
-    jugadoresPrimerEquipo() {
-      return this.$store.getters.obtenerJugadoresPrimerEquipo;
-    },
-    jugadoresSegundoEquipo() {
-      return this.$store.getters.obtenerJugadoresSegundoEquipo;
     }
   },
   methods: {

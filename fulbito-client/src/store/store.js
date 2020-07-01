@@ -57,9 +57,11 @@ export default new Vuex.Store({
       state.partido = partido
     },
     setearJugadoresEnPrimerEquipo(state, jugadores) {
+      console.log("Actualice jugadores primer equipo", jugadores);
       state.jugadoresPrimerEquipo = jugadores;
     },
     setearJugadoresEnSegundoEquipo(state, jugadores) {
+      console.log("Actualice jugadores segundo equipo", jugadores);
       state.jugadoresSegundoEquipo = jugadores;
     },
     setearJugadorEnEquipo(state, datos) {
