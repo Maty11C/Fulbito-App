@@ -2,7 +2,7 @@ const { Given, When, Then, Before, After } = require("cucumber");
 const axios = require("axios");
 const assert = require("assert");
 
-const { Usuario, Equipo } = require("../../database/connection");
+const { Usuario, Equipo, Partido } = require("../../database/connection");
 
 let equipos = [{ nombre: "" }, { nombre: "" }];
 let partido = { fecha: "", hora: "", lugar: "", equipos: [] };
@@ -123,3 +123,9 @@ Then("el usuario no se agrega dos veces al mismo equipo", function() {
 Then("el usuario no se agrega a un equipo completo", function() {
   assert.equal(dataResponse.message,"El equipo ya esta completo")
 })
+
+After(async function () {
+  Usuario.destroy({ where: {}});
+  Equipo.destroy({ where: {}});
+  Partido.destroy({ where: {}});
+});

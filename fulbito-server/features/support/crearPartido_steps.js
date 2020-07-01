@@ -2,6 +2,8 @@ const { Given, When, Then, After } = require("cucumber");
 const axios = require("axios");
 const assert = require("assert");
 
+const { Usuario, Equipo, Partido } = require("../../database/connection");
+
 let equipos = [{ nombre: "equipo1" }, { nombre: "equipo2" }];
 let partido = { fecha: "", hora: "", lugar: "" };
 let dataResponse;
@@ -73,6 +75,8 @@ Then("el partido no se crea por falta de lugar", function () {
   assert.equal(dataResponse.message, "El lugar es obligatorio");
 });
 
-// After(async function () {
-//   await axios.delete("http://localhost:8081/partidos");
-// });
+After(async function () {
+  Usuario.destroy({ where: {}});
+  Equipo.destroy({ where: {}});
+  Partido.destroy({ where: {}});
+});

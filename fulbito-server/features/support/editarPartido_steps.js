@@ -2,6 +2,8 @@ const { Given, When, Then, After } = require("cucumber");
 const axios = require("axios");
 const assert = require("assert");
 
+const { Usuario, Equipo, Partido } = require("../../database/connection");
+
 let equipos = [{ nombre: "Los bosteros" }, { nombre: "Las gallinas" }];
 let partido = { fecha: "", hora: "", lugar: "" };
 let dataResponse;
@@ -215,6 +217,8 @@ Then(
   }
 );
 
-// After(async function () {
-//   await axios.delete("http://localhost:8081/partidos");
-// });
+After(async function () {
+  Usuario.destroy({ where: {}});
+  Equipo.destroy({ where: {}});
+  Partido.destroy({ where: {}});
+});

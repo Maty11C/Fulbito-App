@@ -30,19 +30,25 @@ Partido.hasMany(Equipo);
 Usuario.belongsToMany(Equipo, { through: 'usuario_equipo', timestamps: false })
 Equipo.belongsToMany(Usuario, { through: 'usuario_equipo', timestamps: false })
 
+//Usuarios hardcodeados
+const usuarios = [
+  { nombre: 'Lucas' },
+  { nombre: 'Matias' },
+  { nombre: 'Germán' },
+  { nombre: 'Pedro' },
+  { nombre: 'Pablo' },
+  { nombre: 'Juan' },
+  { nombre: 'Ezequiel' },
+  { nombre: 'Cristian' },
+  { nombre: 'Sebastian' },
+  { nombre: 'Jose' },
+]
+
 sequelize.sync({ force: false }).then(() => {
   console.log(`Base de datos ${database} sincronizada`);
-}).then(async () => {
-  await Usuario.create({nombre: "Lucas"});
-  await Usuario.create({nombre: "Matias"});
-  await Usuario.create({nombre: "Germán"});
-  await Usuario.create({nombre: "Pedro"});
-  await Usuario.create({nombre: "Pablo"});
-  await Usuario.create({nombre: "Juan"});
-  await Usuario.create({nombre: "Ezequiel"});
-  await Usuario.create({nombre: "Cristian"});
-  await Usuario.create({nombre: "Sebastian"});
-  await Usuario.create({nombre: "Jose"});
+})
+.then(async () => {
+  await usuarios.forEach((usuario) => Usuario.create(usuario))
 })
 
 module.exports = { Partido, Equipo, Usuario };
