@@ -15,6 +15,9 @@ Feature: Eliminar participante de un partido
     Then el usuario aparece entre el listado de usuarios disponibles
 
     Scenario: Usuario a eliminar no esta en el equipo
-    Given un equipo con usuarios participantes
-    When selecciono un usuario que no pertence al equipo para eliminarlo
+    Given un equipo en el que no participa el usuario
+    When selecciono un usuario para eliminarlo del equipo del partido
     Then no puedo eliminar un usuario que no pertenece al equipo
+
+
+    

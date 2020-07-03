@@ -86,7 +86,7 @@ Then("el usuario ya no forma parte del equipo", function () {
 
 Then ("el usuario aparece entre el listado de usuarios disponibles", function () {
     //No estoy seguro de como chequear aca
-    //Una que se me ocurrio es agregar al usuario y ver si no hay errores.
+    //Una que se me ocurrio es agregar al usuario y ver si no hay errores
 })
 
 Then("no puedo eliminar un usuario que no pertenece al equipo", function () {
@@ -98,3 +98,6 @@ After(async function () {
     Equipo.destroy({ where: {}});
     Partido.destroy({ where: {}});
   });
+
+
+  
