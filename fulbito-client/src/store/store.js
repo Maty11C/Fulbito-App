@@ -9,7 +9,9 @@ export default new Vuex.Store({
     usuarios: [],
     partido: {},
     jugadoresPrimerEquipo: [],
-    jugadoresSegundoEquipo: []
+    jugadoresSegundoEquipo: [],
+    idEquipoSeleccionadoEliminar:"",
+    idUsuarioAEliminar: ""
   },
   getters: {
     obtenerPartidos: (state) => {
@@ -37,6 +39,12 @@ export default new Vuex.Store({
     },
     obtenerIdSegundoEquipoDePartido(state, idPartido) {
       return state.partidos.find(partido => partido.id === idPartido).equipos[0];
+    },
+    obtenerIdEquipoSeleccionadoEliminar(state) {
+      return state.idEquipoSeleccionadoEliminar;
+    },
+    obtenerIdUsuarioAEliminar(state) {
+      return state.idUsuarioAEliminar;
     }
   },
   mutations: {
@@ -68,6 +76,12 @@ export default new Vuex.Store({
       } else {
         state.jugadoresSegundoEquipo.push(datos.usuarioAgregado);
       }
+    },
+    setearIdEquipoSeleccionadoEliminar(state, idEquipoSeleccionadoEliminar){
+      state.idEquipoSeleccionadoEliminar = idEquipoSeleccionadoEliminar;
+    },
+    setearIdUsuarioAEliminar(state, idUsuarioAEliminar) {
+      state.idUsuarioAEliminar = idUsuarioAEliminar;
     }
   },
 });

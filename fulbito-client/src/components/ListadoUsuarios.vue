@@ -18,7 +18,23 @@
       </div>
       <div class="col-md-4">
         <listado-equipo :equipo="primerEquipo" variant="success" :esPrimerEquipo="true" />
-        <listado-equipo class="mt-3" :equipo="segundoEquipo" variant="danger" :esPrimerEquipo="false" />
+        <listado-equipo
+          class="mt-3"
+          :equipo="segundoEquipo"
+          variant="danger"
+          :esPrimerEquipo="false"
+        />
+        <b-modal
+          id="modal-confirmacion"
+          @ok="eliminar"
+          ok-title="Eliminar"
+          cancel-title="Cancelar"
+          header-bg-variant="dark"
+          header-text-variant="light"
+          ok-variant="danger"
+        >
+          <p class="my-4">¿Estás seguro que querés eliminar al jugador del equipo?</p>
+        </b-modal>
       </div>
     </div>
   </div>
@@ -85,6 +101,25 @@ export default {
     },
     volverAtras() {
       this.$router.push({ path: "/" });
+    },
+    eliminar() {
+      api()
+        .delete(`/equipos/${this.$store.getters.obtenerIdEquipoSeleccionadoEliminar}/${this.$store.getters.obtenerIdUsuarioAEliminar}`)
+        .then(response => {
+          this.$bvToast.toast(response.data, {
+            title: "Info",
+            variant: "success",
+            solid: true
+          });
+        })
+        .catch(error => {
+          console.log(error);
+          this.$bvToast.toast(error, {
+            title: "Error",
+            variant: "danger",
+            solid: true
+          });
+        });
     }
   }
 };

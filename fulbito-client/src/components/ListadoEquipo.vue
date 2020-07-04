@@ -7,7 +7,12 @@
         class="d-flex justify-content-between align-items-center"
       >
         {{jugador.text}}
-        <b-icon icon="x" font-scale="1.3" class="icono-pointer" @click="abrirModalConfirmacion(jugador.value)" />
+        <b-icon
+          icon="x"
+          font-scale="1.3"
+          class="icono-pointer"
+          @click="abrirModalConfirmacion(jugador.value)"
+        />
       </b-list-group-item>
     </template>
   </b-list-group>
@@ -55,7 +60,9 @@ export default {
       return listaProcesada;
     },
     abrirModalConfirmacion(idJugador) {
-      console.log("Id jugador a eliminar: ", idJugador);
+      this.$store.commit("setearIdEquipoSeleccionadoEliminar",this.equipo.id);
+      this.$store.commit("setearIdUsuarioAEliminar",idJugador);
+      this.$bvModal.show("modal-confirmacion");
     }
   }
 };
