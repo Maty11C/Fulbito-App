@@ -217,8 +217,8 @@ Then(
   }
 );
 
-//After(async function () {
-//  Usuario.destroy({ where: {}});
-//  Equipo.destroy({ where: {}});
-//  Partido.destroy({ where: {}});
-//});
+After(async function () {
+ Usuario.destroy({ where: {}});
+ Equipo.destroy({ where: {}});
+ Partido.destroy({ where: {}});
+});

@@ -1,5 +1,14 @@
 const { Equipo, Usuario, Partido } = require("../database/connection");
 
+function obtenerOtroEquipo(equipos, idEquipoActual) {
+  return equipos.find((equipo) => equipo.id != idEquipoActual);
+}
+
+function usuarioPerteneceAlEquipo(equipo, usuario) {
+  usuariosDeEquipo = equipo.dataValues.usuarios
+  return usuariosDeEquipo.length > 0 ? usuariosDeEquipo.some((x) => x.dataValues.id === usuario.dataValues.id) : false
+}
+
 exports.obtenerEquipoPorId = (req, res) => {
   Equipo.findAll({
     where: { id: req.params.id },
@@ -30,20 +39,21 @@ exports.agregarJugadorAEquipo = async (req, res) => {
     include: [{ model: Equipo, as: "equipos" }],
   });
 
-  let otroEquipo = obtenerOtroEquipo(
-    partido[0].dataValues.equipos,
-    req.params.idEquipo
-  );
+  const idOtroEquipo = obtenerOtroEquipo(partido[0].dataValues.equipos, req.params.idEquipo).id
+  let otroEquipo = await Equipo.findOne({
+    where: { id: idOtroEquipo },
+    include: [{ model: Usuario, as: "usuarios" }],
+  });
 
   if (equipo.dataValues.usuarios.length === 5) {
     res.status(400).send({
       message: "El equipo ya esta completo",
     });
-  } else if (await usuarioEstaEnElEquipo(equipo, usuario)) {
+  } else if (usuarioPerteneceAlEquipo(equipo, usuario)) {
     res.status(400).send({
       message: "El usuario ya se encuentra en el equipo",
     });
-  } else if (await usuarioEstaEnElEquipo(otroEquipo, usuario)) {
+  } else if (usuarioPerteneceAlEquipo(otroEquipo, usuario)) {
     res.status(400).send({
       message: "El usuario no puede pertenecer a los dos equipos",
     });
@@ -59,23 +69,6 @@ exports.agregarJugadorAEquipo = async (req, res) => {
   }
 };
 
-async function usuarioEstaEnElEquipo(equipo, usuarioAInsertar) {
-  let otroEquipo = await Equipo.findOne({
-    where: { id: equipo.dataValues.id },
-    include: [{ model: Usuario, as: "usuarios" }],
-  });
-
-  return otroEquipo.dataValues.usuarios.length > 0
-    ? otroEquipo.dataValues.usuarios.some((usuario) => {
-        return usuario.dataValues.id === usuarioAInsertar.dataValues.id;
-      })
-    : false;
-}
-
-function obtenerOtroEquipo(equipos, idEquipoActual) {
-  return equipos.find((equipo) => equipo.id != idEquipoActual);
-}
-
 exports.eliminarJugador = async (req, res) => {
   let equipo = await Equipo.findOne({
     where: { id: req.params.idEquipo },
@@ -86,8 +79,14 @@ exports.eliminarJugador = async (req, res) => {
     where: { id: req.params.idUsuario },
   });
 
-  equipo
-    .removeUsuario(usuario)
+  if (!usuarioPerteneceAlEquipo(equipo, usuario)) {
+    res.status(400).send({
+      message: "El jugador no pertenece al equipo",
+    });
+    return
+  }
+
+  equipo.removeUsuario(usuario)
     .then(() => res.send("Se eliminó al usuario del equipo exitosamente"))
     .catch(() => res.send("Falló la eliminación"));
 };
