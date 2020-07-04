@@ -124,8 +124,8 @@ Then("el usuario no se agrega a un equipo completo", function() {
   assert.equal(dataResponse.message,"El equipo ya esta completo")
 })
 
-After(async function () {
-  Usuario.destroy({ where: {}});
-  Equipo.destroy({ where: {}});
-  Partido.destroy({ where: {}});
-});
+//After(async function () {
+//  Usuario.destroy({ where: {}});
+//  Equipo.destroy({ where: {}});
+//  Partido.destroy({ where: {}});
+//});

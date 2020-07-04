@@ -75,3 +75,24 @@ async function usuarioEstaEnElEquipo(equipo, usuarioAInsertar) {
 function obtenerOtroEquipo(equipos, idEquipoActual) {
   return equipos.find((equipo) => equipo.id != idEquipoActual);
 }
+
+exports.eliminarJugador = async (req, res) => {
+  let equipo = await Equipo.findOne({
+    where: { id: req.params.idEquipo },
+    include: [{ model: Usuario, as: "usuarios" }],
+  })
+
+  let usuario = await Usuario.findOne({
+    where: {id: req.body.idUsuario },
+  })
+
+  equipo.removeUsuario(usuario)
+  .then((response) => {res.send(response)
+    console.log("***********" , response)
+  })
+  .catch((error) => {
+    console.log("*****************", error);
+
+   res.send(error)
+  });
+}

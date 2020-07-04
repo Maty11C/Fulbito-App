@@ -19,8 +19,6 @@ Before(async function () {
     partido = { fecha, hora, lugar, equipos };
   
     partidoCreado = await axios.post("http://localhost:8081/partidos", partido);
-    //usuarioAEliminar = await Usuario.create({ nombre: "pepito" });
-    //No estoy seguro si es preferible crear al usuario acao en cada Given
 
   });
 
@@ -38,18 +36,18 @@ Given("un equipo con usuarios participantes", async function () {
     await equipo.addUsuario(usuarioEnEquipo3);
 });
 
-Given("un equipo en el que no participa el usuario", async function () {
-    let equipo = await Equipo.findOne({where:{id: partidoCreado.data.equipos[0].id}});
-
-    usuarioAEliminar = await Usuario.create({ nombre: "pepito" });
-    usuarioEnEquipo1 = await Usuario.create({ nombre: "pepito" });
-    usuarioEnEquipo2 = await Usuario.create({ nombre: "pepito" });
-    usuarioEnEquipo3 = await Usuario.create({ nombre: "pepito" });
-
-    await equipo.addUsuario(usuarioEnEquipo1);
-    await equipo.addUsuario(usuarioEnEquipo2);
-    await equipo.addUsuario(usuarioEnEquipo3);
-});
+//Given("un equipo en el que no participa el usuario", async function () {
+//    let equipo = await Equipo.findOne({where:{id: partidoCreado.data.equipos[0].id}});
+//
+//    usuarioAEliminar = await Usuario.create({ nombre: "pepito" });
+//    usuarioEnEquipo1 = await Usuario.create({ nombre: "pepito" });
+//    usuarioEnEquipo2 = await Usuario.create({ nombre: "pepito" });
+//    usuarioEnEquipo3 = await Usuario.create({ nombre: "pepito" });
+//
+//    await equipo.addUsuario(usuarioEnEquipo1);
+//    await equipo.addUsuario(usuarioEnEquipo2);
+//    await equipo.addUsuario(usuarioEnEquipo3);
+//});
 
 When("selecciono un usuario para eliminarlo del equipo del partido", async function () {
     const body = { idUsuario: usuarioAEliminar.dataValues.id };
@@ -66,7 +64,7 @@ When("selecciono un usuario para eliminarlo del equipo del partido", async funct
         });
 });
 
-Then("el usuario ya no forma parte del equipo", function () {
+Then("el usuario ya no forma parte del equipo", async function () {
     await axios
      .get(`http://localhost:8081/equipos/${partidoCreado.data.equipos[0].id}`)
      .then((response) => {
@@ -84,20 +82,20 @@ Then("el usuario ya no forma parte del equipo", function () {
       );
 });
 
-Then ("el usuario aparece entre el listado de usuarios disponibles", function () {
-    //No estoy seguro de como chequear aca
-    //Una que se me ocurrio es agregar al usuario y ver si no hay errores
-})
+//Then ("el usuario aparece entre el listado de usuarios disponibles", function () {
+//    //No estoy seguro de como chequear aca
+//    //Una que se me ocurrio es agregar al usuario y ver si no hay errores
+//})
+//
+//Then("no puedo eliminar un usuario que no pertenece al equipo", function () {
+//    assert.equal(dataResponse.message, "El usuario no pertence al equipo")
+//})
 
-Then("no puedo eliminar un usuario que no pertenece al equipo", function () {
-    assert.equal(dataResponse.message, "El usuario no pertence al equipo")
-})
-
-After(async function () {
-    Usuario.destroy({ where: {}});
-    Equipo.destroy({ where: {}});
-    Partido.destroy({ where: {}});
-  });
+//After(async function () {
+//    Usuario.destroy({ where: {}});
+//    Equipo.destroy({ where: {}});
+//    Partido.destroy({ where: {}});
+//  });
 
 
   

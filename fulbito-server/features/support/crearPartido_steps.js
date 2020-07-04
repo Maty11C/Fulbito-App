@@ -75,8 +75,8 @@ Then("el partido no se crea por falta de lugar", function () {
   assert.equal(dataResponse.message, "El lugar es obligatorio");
 });
 
-After(async function () {
-  Usuario.destroy({ where: {}});
-  Equipo.destroy({ where: {}});
-  Partido.destroy({ where: {}});
-});
+//After(async function () {
+//  Usuario.destroy({ where: {}});
+//  Equipo.destroy({ where: {}});
+//  Partido.destroy({ where: {}});
+//});
