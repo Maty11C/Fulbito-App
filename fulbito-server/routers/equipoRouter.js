@@ -7,6 +7,6 @@ router.get('/:id', equipoController.obtenerEquipoPorId);
 
 router.post('/:idEquipo', equipoController.agregarJugadorAEquipo);
 
-router.delete('/idEquipo', equipoController.eliminarJugador);
+router.delete('/:idEquipo/:idUsuario', equipoController.eliminarJugador);
 
 module.exports = router;

@@ -50,11 +50,9 @@ Given("un equipo con usuarios participantes", async function () {
 //});
 
 When("selecciono un usuario para eliminarlo del equipo del partido", async function () {
-    const body = { idUsuario: usuarioAEliminar.dataValues.id };
     await axios
         .delete(
-            `http://localhost:8081/equipos/${partidoCreado.data.equipos[0].id}`,
-            body
+            `http://localhost:8081/equipos/${partidoCreado.data.equipos[0].id}/${usuarioAEliminar.dataValues.id}`,
         )
         .then((response) => {
             dataResponse = response.data;

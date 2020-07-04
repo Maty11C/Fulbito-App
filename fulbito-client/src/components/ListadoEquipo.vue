@@ -2,7 +2,13 @@
   <b-list-group class="col-md-12">
     <b-list-group-item :variant="this.variant">{{equipo.nombre}}</b-list-group-item>
     <template v-for="jugador in jugadoresEquipo">
-      <b-list-group-item :key="jugador.value">{{jugador.text}}</b-list-group-item>
+      <b-list-group-item
+        :key="jugador.value"
+        class="d-flex justify-content-between align-items-center"
+      >
+        {{jugador.text}}
+        <b-icon icon="x" font-scale="1.3" class="icono-pointer" @click="abrirModalConfirmacion(jugador.value)" />
+      </b-list-group-item>
     </template>
   </b-list-group>
 </template>
@@ -47,7 +53,15 @@ export default {
         listaProcesada.push({ value: usuario.id, text: usuario.nombre })
       );
       return listaProcesada;
+    },
+    abrirModalConfirmacion(idJugador) {
+      console.log("Id jugador a eliminar: ", idJugador);
     }
   }
 };
 </script>
+<style scoped>
+.icono-pointer:hover {
+  cursor: pointer;
+}
+</style>
